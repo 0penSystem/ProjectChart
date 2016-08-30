@@ -1,0 +1,15 @@
+Option Compare Database
+
+
+
+Private Sub CreateSlide_Click()
+    Call Create.CreateSlide(Me.ProjectID.Value)
+End Sub
+
+Private Sub SaveToDisk_Click()
+    MsgBox ("Not implemented yet!")
+End Sub
+
+Private Sub UpdateSlide_Click()
+    Call FixSlide(Me.ProjectID.Value)
+End Sub

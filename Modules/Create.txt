@@ -1,0 +1,334 @@
+Attribute VB_Name = "Create"
+Option Compare Database
+
+
+Public ProjectStart As Date, ProjectEnd As Date
+Public SlideWidth As Integer
+
+
+
+Function OpenPresentation(AppPPT As Object, Rec As Recordset) As Object
+    
+    
+    'AppPPT.Presentations.Open(Rec.Fields("FilePath"), ReadOnly:=False)
+    Dim answer As VbMsgBoxResult
+    Rec.Edit
+    
+    'get attachment field
+    Attach = Rec.Fields("PowerPointFile")
+    
+    Dim FilePath As String
+    FilePath = Environ("TEMP") & "\chartmaker.ppt"
+ 
+    
+    'is there already an attachment?
+    If (Attach.BOF) Then
+        'No, make one
+        Set Pres = AppPPT.Presentations.Add
+        Set Slide = Pres.Slides.Add(1, ppLayoutBlank)
+        
+             
+        With Pres
+            .SaveAs FilePath
+        End With
+        
+        Attach.AddNew
+        Attach.Fields("FileData").LoadFromFile FilePath
+        Attach.Update
+        
+        Rec.Update
+        
+        Set OpenPresentation = Pres
+        GoTo Endf
+    
+    Else
+        answer = MsgBox("This file already exists in the database. Are you sure you want to delete it and create a new one?", vbYesNo, "File Exists")
+        If (answer = vbYes) Then
+            Set Pres = AppPPT.Presentations.Add
+            Set Slide = Pres.Slides.Add(1, ppLayoutBlank)
+            
+                 
+            With Pres
+                .SaveAs FilePath
+            End With
+            
+            Attach.Delete
+            Attach.AddNew
+            Attach.Fields("FileData").LoadFromFile FilePath
+            Attach.Update
+            
+            Rec.Update
+            
+            Set OpenPresentation = Pres
+            GoTo Endf
+        Else
+            If (answer = vbNo) Then
+                MsgBox "Now Stopping."
+                Exit Function
+            End If
+        End If
+        
+    End If
+    
+    
+    Set OpenPresentation = AppPPT.Presentations.Open(FilePath, msoFalse)
+
+Alternate:
+    killFile (FilePath)
+        Attach.Fields("FileData").SaveToFile FilePath
+        Set OpenPresentation = AppPPT.Presentations.Open(FilePath, msoFalse)
+    
+    
+        
+Endf:
+    
+    
+End Function
+
+
+Public Sub CreateSlide(ProjectID As Integer, Optional Timescale As String = "q")
+    Dim Rec As Recordset
+    Dim Rec2 As Recordset
+    Dim AppPPT As Object
+    Dim PPT As Object
+
+    Set Rec = GetBars(ProjectID)
+    Set Rec2 = GetEvents(ProjectID)
+    Set AppPPT = OpenPPT
+    
+    
+    
+    'Open attached powerpoint file here
+    Set PPT = OpenPresentation(AppPPT, Rec)
+    
+    If (PPT Is Nothing) Then
+        AppPPT.Quit
+        Exit Sub
+    End If
+    
+    SlideWidth = PPT.SlideMaster.Width
+    
+    PrintTimescale PPT, Rec, Timescale
+    PrintBars PPT, Rec
+    PrintEvents PPT, Rec2
+    
+    SavePPT PPT, AppPPT, Rec
+    'OpenRecordsetOutput Rec
+End Sub
+
+
+Sub PrintEvents(PPT As Object, Rec As Recordset)
+    Dim EventDate As Date
+    
+    Set myDocument = PPT.Slides(1)
+ 
+
+    
+    
+    
+    With Rec     'go through each event
+        Do While Not .EOF
+            With Rec
+                EventName = .Fields("EventName")
+                EventDate = .Fields("EventDate")
+                EventID = .Fields("EventID")
+                BarID = .Fields("BarID")
+            End With
+            
+            'crappy defaults
+            EventTop = 1
+            EventWidth = 20
+            EventHeight = 20
+            EventLeft = DateToPoint(EventDate) - (EventWidth / 2)
+            
+            
+            
+            
+            
+            'if an event has a bar specified, place it above that bar
+            If Not IsNull(BarID) Then
+                EventTop = myDocument.Shapes("Bar_" & BarID).Top - 20
+                
+                
+            End If
+            
+            'Null BarID, place it at the top?
+            
+            With myDocument.Shapes.AddShape(Type:=36, Top:=EventTop, Left:=EventLeft, Width:=20, Height:=20)
+              .Name = "Event_" & EventID
+             '.TextFrame.TextRange.Text = EventName 'Event Text is really large, hard to read. Figure out a better way to do this.
+            End With
+    
+             .MoveNext
+        Loop
+    End With
+    
+End Sub
+
+
+Sub PrintBars(PPT As Object, Rec As Recordset)
+    Dim StartDate As Date, EndDate As Date
+
+    minBarOffset = 20 'We want to keep bars apart from each other if we can
+    maxBarOffset = 100
+    numRows = Rec.RecordCount
+    availableHeight = PPT.SlideMaster.Height - 40
+    barHeight = 20
+    offsetRoom = availableHeight - (barHeight * numRows)
+    barOffset = (offsetRoom / numRows) + barHeight
+    
+    If barOffset > maxBarOffset Then
+        barOffset = maxBarOffset
+    End If
+    If barOffset < minBarOffset Then
+        barOffset = minBarOffset
+    End If
+    
+    Set myDocument = PPT.Slides(1)
+ 
+    
+    
+    
+    'for each bar, do....
+    With Rec
+      Do While Not .EOF
+         'Make a bar!
+           
+          With Rec
+                BarName = .Fields("BarName")
+                StartDate = .Fields("Bars.StartDate")
+                EndDate = .Fields("Bars.EndDate")
+                BarID = .Fields("BarID")
+                Row = .Fields("Row")
+          End With
+          
+          
+    
+         
+         
+         'How wide does the bar need to be?
+         BarWidth = DateToPoint(EndDate) - DateToPoint(StartDate)
+         
+          With myDocument.Shapes.AddShape(Type:=1, Top:=40 + (barOffset * Row), Left:=DateToPoint(StartDate), Width:=BarWidth, Height:=20)
+          .Name = "Bar_" & BarID
+          .TextFrame.TextRange.Text = BarName
+          End With
+    
+         
+         .MoveNext
+      Loop
+   End With
+End Sub
+
+Function DateToPoint(DateIn As Date) As Integer
+    DTPConstant = SlideWidth / DateDiff("d", ProjectStart, ProjectEnd)
+    DateToPoint = DateDiff("d", ProjectStart, DateIn) * DTPConstant
+End Function
+
+Sub PrintTimescale(PPT As Object, Rec As Recordset, ts As String)
+    'what timescale is it?
+    Dim StartDate As Date
+    Dim EndDate As Date
+    'StartDate = "8/12/2016"
+    'EndDate = "8/12/2028"
+    
+    
+    
+    With Rec
+        StartDate = .Fields("Projects.StartDate")
+        EndDate = .Fields("Projects.EndDate")
+    End With
+    
+    ProjectStart = StartDate
+    ProjectEnd = EndDate
+    
+    'Change "q" to a string var to let the user pick the timescale later
+    Diff = DateDiff(ts, StartDate, EndDate)
+   
+    
+    
+    BoxWidth = PPT.SlideMaster.Width / (Diff + 1)
+    
+    
+    
+    'make some boxes! By Default we want them filled with white and black borders.
+    
+    
+    Set myDocument = PPT.Slides(1)
+    For i = 0 To Diff
+        With myDocument.Shapes.AddShape(Type:=1, Top:=20, Left:=(i * BoxWidth), Width:=BoxWidth, Height:=20)
+            .Name = "Timescale_" & i
+        End With
+    Next i
+    
+End Sub
+
+Public Function OpenPPT() As Object
+    'Returns an opened PPT app
+    Dim AppPPT As Object
+    Set AppPPT = CreateObject("PowerPoint.Application")
+    AppPPT.Visible = True
+    Set OpenPPT = AppPPT
+    
+    
+End Function
+
+Sub SavePPT(PPT As Object, AppPPT As Object, Rec As Recordset)
+   Dim FilePath As String
+   
+   
+   PPT.Save
+   AppPPT.Quit
+   
+   Rec.MoveFirst
+   FilePath = Environ("TEMP") & "\chartmaker.ppt"
+   Rec.Edit
+   
+   Attach = Rec.Fields("PowerPointFile")
+   
+   With Attach
+   .MoveFirst
+   .Edit
+   .Fields("FileData").LoadFromFile FilePath
+   .Update
+   End With
+   
+   Rec.Update
+   
+   Set PPT = Nothing
+   Set AppPPT = Nothing
+   
+   With New FileSystemObject
+    If .FileExists(FilePath) Then
+        .DeleteFile FilePath
+    End If
+    End With
+End Sub
+
+    
+
+Function GetEvents(ProjectID As Integer) As Recordset
+'Gather all requisite data from the database
+    Dim DB As Database
+    Dim SQL As String
+    SQL = "SELECT Projects.*, Events.*, Projects.ProjectID FROM Projects INNER JOIN Events ON Projects.ProjectID = Events.ProjectID WHERE (((Projects.ProjectID)=" & ProjectID & "));"
+ 
+     
+    Set DB = CurrentDb
+    
+    Set GetEvents = DB.OpenRecordset(SQL)
+    
+End Function
+
+Function GetBars(ProjectID As Integer) As Recordset
+'Gather all requisite data from the database
+    Dim DB As Database
+    Dim SQL As String
+    SQL = "SELECT Projects.*, Bars.* FROM Projects INNER JOIN Bars ON Projects.ProjectID = Bars.ProjectID WHERE (((Projects.ProjectID)=" & ProjectID & "));"
+    
+     
+    Set DB = CurrentDb
+    
+    Set GetBars = DB.OpenRecordset(SQL)
+    
+End Function
