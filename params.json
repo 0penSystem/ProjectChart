@@ -1,0 +1,6 @@
+{
+  "name": "ProjectChart",
+  "tagline": "A simple timeline creator.",
+  "body": "# ProjectChart\r\n\r\nA C# project intended to make life easier.\r\nCreates simple timelines with bars (events spanning from one date to another) and simple events (only occur on one date).\r\n\r\n[Releases](https://github.com/0penSystem/ProjectChart/releases)",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
