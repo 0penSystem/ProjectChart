@@ -74,6 +74,7 @@ namespace ProjectChart
 
                 bar.Name = "Bar_" + d.Field<int>("BarID");
 
+                bar.TextFrame.TextRange.Text = d.Field<string>("Bar Name");
                 i++;
             }
 
@@ -81,6 +82,8 @@ namespace ProjectChart
 
 
         }
+
+        
 
         private static void CreateEvents(Presentation ppt, DataSet data)
         {
@@ -102,6 +105,13 @@ namespace ProjectChart
 
                 var e = ppt.Slides[1].Shapes.AddShape(MsoAutoShapeType.msoShapeDownArrow, (float)(eventOffset- (eventWidth/2)), (float)eventTop, (float)eventWidth, 20);
                 e.Name = "Event_" + d.Field<int>("EventID");
+
+                var t = ppt.Slides[1].Shapes.AddTextbox(MsoTextOrientation.msoTextOrientationHorizontal, (float)(eventOffset + (eventWidth / 2)), (float)eventTop, 100, 20);
+
+                t.TextFrame.TextRange.Text = d.Field<string>("Event Name");
+                
+                
+                
             }
 
         }

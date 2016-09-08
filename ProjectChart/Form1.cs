@@ -10,9 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Xml;
-
-
-
+using System.Diagnostics;
 
 namespace ProjectChart
 {
@@ -176,12 +174,26 @@ namespace ProjectChart
             
             CreateModule.CreateChart(ppt, currentProject.data);
 
+
         }
 
-        
+        private void button1_Click_2(object sender, EventArgs e)
+        {
+            DialogResult d = ProjectOpen.ShowDialog();
+            if (d == DialogResult.OK)
+            {
+                Powerpoint = new Microsoft.Office.Interop.PowerPoint.Application();
+                ppt = Powerpoint.Presentations.Open(ProjectOpen.FileName);
+                
+                
 
+                ActivateControls();
 
+                currentProject = currentProject ?? new Project();
 
-
+            
+                
+            }
+        }
     }
 }
