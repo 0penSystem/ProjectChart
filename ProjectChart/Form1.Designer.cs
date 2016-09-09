@@ -45,11 +45,13 @@
             this.label3 = new System.Windows.Forms.Label();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.SaveProject = new System.Windows.Forms.Button();
+            this.openPPTSlide = new System.Windows.Forms.Button();
             this.CreateSlideBTN = new System.Windows.Forms.Button();
             this.ProjectSave = new System.Windows.Forms.SaveFileDialog();
             this.ProjectOpen = new System.Windows.Forms.OpenFileDialog();
             this.projectBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.projectDAta = new ProjectChart.ProjectDAta();
+            this.UpdateSlide = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabBars.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.BarGrid)).BeginInit();
@@ -125,6 +127,7 @@
             // NewProject
             // 
             this.NewProject.AutoSize = true;
+            this.NewProject.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.NewProject.Location = new System.Drawing.Point(3, 3);
             this.NewProject.Name = "NewProject";
             this.NewProject.Size = new System.Drawing.Size(75, 23);
@@ -136,11 +139,12 @@
             // OpenProject
             // 
             this.OpenProject.AutoSize = true;
+            this.OpenProject.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.OpenProject.Location = new System.Drawing.Point(84, 3);
             this.OpenProject.Name = "OpenProject";
-            this.OpenProject.Size = new System.Drawing.Size(79, 23);
+            this.OpenProject.Size = new System.Drawing.Size(68, 23);
             this.OpenProject.TabIndex = 2;
-            this.OpenProject.Text = "Open Project";
+            this.OpenProject.Text = "Open XML";
             this.OpenProject.UseVisualStyleBackColor = true;
             this.OpenProject.Click += new System.EventHandler(this.OpenProject_Click);
             // 
@@ -203,7 +207,9 @@
             this.flowLayoutPanel1.Controls.Add(this.NewProject);
             this.flowLayoutPanel1.Controls.Add(this.OpenProject);
             this.flowLayoutPanel1.Controls.Add(this.SaveProject);
+            this.flowLayoutPanel1.Controls.Add(this.openPPTSlide);
             this.flowLayoutPanel1.Controls.Add(this.CreateSlideBTN);
+            this.flowLayoutPanel1.Controls.Add(this.UpdateSlide);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
@@ -213,19 +219,34 @@
             // SaveProject
             // 
             this.SaveProject.AutoSize = true;
-            this.SaveProject.Location = new System.Drawing.Point(169, 3);
+            this.SaveProject.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.SaveProject.Enabled = false;
+            this.SaveProject.Location = new System.Drawing.Point(158, 3);
             this.SaveProject.Name = "SaveProject";
-            this.SaveProject.Size = new System.Drawing.Size(79, 23);
+            this.SaveProject.Size = new System.Drawing.Size(67, 23);
             this.SaveProject.TabIndex = 3;
-            this.SaveProject.Text = "Save Project";
+            this.SaveProject.Text = "Save XML";
             this.SaveProject.UseVisualStyleBackColor = true;
             this.SaveProject.Click += new System.EventHandler(this.SaveProject_Click);
+            // 
+            // openPPTSlide
+            // 
+            this.openPPTSlide.AutoSize = true;
+            this.openPPTSlide.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.openPPTSlide.Location = new System.Drawing.Point(231, 3);
+            this.openPPTSlide.Name = "openPPTSlide";
+            this.openPPTSlide.Size = new System.Drawing.Size(125, 23);
+            this.openPPTSlide.TabIndex = 5;
+            this.openPPTSlide.Text = "Open Powerpoint Slide";
+            this.openPPTSlide.UseVisualStyleBackColor = true;
+            this.openPPTSlide.Click += new System.EventHandler(this.openPPTSlide_Click);
             // 
             // CreateSlideBTN
             // 
             this.CreateSlideBTN.AutoSize = true;
+            this.CreateSlideBTN.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.CreateSlideBTN.Enabled = false;
-            this.CreateSlideBTN.Location = new System.Drawing.Point(254, 3);
+            this.CreateSlideBTN.Location = new System.Drawing.Point(362, 3);
             this.CreateSlideBTN.Name = "CreateSlideBTN";
             this.CreateSlideBTN.Size = new System.Drawing.Size(130, 23);
             this.CreateSlideBTN.TabIndex = 4;
@@ -247,6 +268,19 @@
             // 
             this.projectDAta.DataSetName = "ProjectDAta";
             this.projectDAta.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            // 
+            // UpdateSlide
+            // 
+            this.UpdateSlide.AutoSize = true;
+            this.UpdateSlide.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.UpdateSlide.Enabled = false;
+            this.UpdateSlide.Location = new System.Drawing.Point(498, 3);
+            this.UpdateSlide.Name = "UpdateSlide";
+            this.UpdateSlide.Size = new System.Drawing.Size(78, 23);
+            this.UpdateSlide.TabIndex = 6;
+            this.UpdateSlide.Text = "Update Slide";
+            this.UpdateSlide.UseVisualStyleBackColor = true;
+            this.UpdateSlide.Click += new System.EventHandler(this.UpdateSlide_Click);
             // 
             // Form1
             // 
@@ -302,6 +336,8 @@
         private System.Windows.Forms.BindingSource projectBindingSource;
         private ProjectDAta projectDAta;
         private System.Windows.Forms.Button CreateSlideBTN;
+        private System.Windows.Forms.Button openPPTSlide;
+        private System.Windows.Forms.Button UpdateSlide;
     }
 }
 

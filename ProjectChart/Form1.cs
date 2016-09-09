@@ -43,7 +43,11 @@ namespace ProjectChart
         public Form1()
         {
             InitializeComponent();
-                    }
+
+
+            Powerpoint = Powerpoint ?? new Microsoft.Office.Interop.PowerPoint.Application();
+            Powerpoint.PresentationBeforeSave += Powerpoint_PresentationBeforeSave;
+        }
 
         private void ActivateControls()
         {
@@ -51,10 +55,11 @@ namespace ProjectChart
             StartDatePicker.Enabled = true;
             EndDatePicker.Enabled = true;
             tabControl1.Enabled = true;
-            BarGrid.DataSource = CurrentProject.data.Tables["Bars"];
+            BarGrid.DataSource = currentProject.data.Tables["Bars"];
             EventGrid.DataSource = currentProject.data.Tables["Events"];
             CreateSlideBTN.Enabled = true;
-           
+            SaveProject.Enabled = true;
+            UpdateSlide.Enabled = true;
         }
 
 
@@ -110,24 +115,7 @@ namespace ProjectChart
         {
 
         }
-
-        private void BarName_TextChanged(object sender, EventArgs e)
-        {
-        }
-
-        private void BarStart_ValueChanged(object sender, EventArgs e)
-        {
-        }
-
-        private void BarEnd_ValueChanged(object sender, EventArgs e)
-        {
-        }
-
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            //load selected bar
-        }
-
+        
         private void EventGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
@@ -156,44 +144,66 @@ namespace ProjectChart
 
 
                 ActivateControls();
-                currentProject = new Project();
-                currentProject.data.ReadXml(ProjectOpen.FileName);
+                currentProject = new Project(ProjectOpen.FileName);
                 ActivateControls();
 
-                textBoxProjectName.Text = currentProject.data.Tables["Project"].Rows[1].Field<string>("Project Name");
-                StartDatePicker.Value = currentProject.data.Tables["Project"].Rows[1].Field<DateTime>("Start Date");
-                EndDatePicker.Value = currentProject.data.Tables["Project"].Rows[1].Field<DateTime>("End Date");
+                textBoxProjectName.Text = currentProject.data.Tables["Project"].Rows[0].Field<string>("Project Name");
+                StartDatePicker.Value = currentProject.data.Tables["Project"].Rows[0].Field<DateTime>("Start Date");
+                EndDatePicker.Value = currentProject.data.Tables["Project"].Rows[0].Field<DateTime>("End Date");
             }
         }
 
         private void button1_Click_1(object sender, EventArgs e)
         {
             //TODO: IMPLEMENT POWERPOINT CODE
-            Powerpoint = new Microsoft.Office.Interop.PowerPoint.Application();
-            ppt = Powerpoint.Presentations.Add                (Microsoft.Office.Core.MsoTriState.msoTrue);
-            
+            Powerpoint = Powerpoint ?? new Microsoft.Office.Interop.PowerPoint.Application();
+            ppt = Powerpoint.Presentations.Add(Microsoft.Office.Core.MsoTriState.msoTrue);
+
+
             CreateModule.CreateChart(ppt, currentProject.data);
 
 
         }
 
-        private void button1_Click_2(object sender, EventArgs e)
+        private void Powerpoint_PresentationBeforeSave(Presentation Pres, ref bool Cancel)
+        {
+            Pres.Tags.Delete("ProjectData");
+            Pres.Tags.Add("ProjectData", currentProject.data.GetXml());
+        }
+        
+
+        private void openPPTSlide_Click(object sender, EventArgs e)
         {
             DialogResult d = ProjectOpen.ShowDialog();
             if (d == DialogResult.OK)
             {
-                Powerpoint = new Microsoft.Office.Interop.PowerPoint.Application();
+                Powerpoint = Powerpoint ?? new Microsoft.Office.Interop.PowerPoint.Application();
                 ppt = Powerpoint.Presentations.Open(ProjectOpen.FileName);
-                
                 
 
                 ActivateControls();
 
-                currentProject = currentProject ?? new Project();
 
-            
-                
+                var xml = ppt.Tags["ProjectData"];
+                var data = new XmlDocument();
+                data.LoadXml(xml);
+                XmlReader n = new XmlNodeReader(data);
+
+                currentProject = new Project(n);
+
+
+                textBoxProjectName.Text = currentProject.data.Tables["Project"].Rows[0].Field<string>("Project Name");
+                StartDatePicker.Value = currentProject.data.Tables["Project"].Rows[0].Field<DateTime>("Start Date");
+                EndDatePicker.Value = currentProject.data.Tables["Project"].Rows[0].Field<DateTime>("End Date");
+
+                BarGrid.DataSource = currentProject.data.Tables["Bars"];
+                EventGrid.DataSource = currentProject.data.Tables["Events"];
             }
+        }
+
+        private void UpdateSlide_Click(object sender, EventArgs e)
+        {
+            UpdateModule.UpdateChart(ppt, currentProject.data);
         }
     }
 }

@@ -1,11 +1,7 @@
 ﻿using Microsoft.Office.Interop.PowerPoint;
 using System;
 using Microsoft.Office.Core;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProjectChart
 {
@@ -52,7 +48,8 @@ namespace ProjectChart
 
             for (int i = 0; i < quarters; i++)
             {
-                ppt.Slides[1].Shapes.AddShape(MsoAutoShapeType.msoShapeRectangle, (float)(i * boxWidth), 20, (float)boxWidth, 20);
+                var ts = ppt.Slides[1].Shapes.AddShape(MsoAutoShapeType.msoShapeRectangle, (float)(i * boxWidth), 20, (float)boxWidth, 20);
+                ts.Tags.Add("Timescale", "true");
             }
 
 
