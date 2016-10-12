@@ -27,7 +27,7 @@ namespace ProjectChart
                 var temp = data.Tables["Project"].Rows[0];
                 temp.BeginEdit();
                 temp.SetField("Project Name", value);
-                temp.EndEdit(); 
+                temp.EndEdit();
 
             }
         }
@@ -63,7 +63,7 @@ namespace ProjectChart
                 temp.EndEdit();
             }
         }
-        
+
         public Project()
         {
             data = new DataSet();
@@ -84,7 +84,7 @@ namespace ProjectChart
             data.ReadXmlSchema(@"ProjectData.xsd");
             data.ReadXml(x);
         }
-        
-        
+
+
     }
 }
