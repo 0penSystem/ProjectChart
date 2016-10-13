@@ -1,11 +1,7 @@
 ﻿using Microsoft.Office.Interop.PowerPoint;
 using System;
 using Microsoft.Office.Core;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProjectChart
 {
@@ -43,16 +39,17 @@ namespace ProjectChart
 
             TimeSpan span = end - start;
 
-            TIME_TO_WIDTH = ( width / span.TotalSeconds);
+            TIME_TO_WIDTH = (width / span.TotalSeconds);
 
-            int quarters =(int)( span.Days / daysInAQuarter);
-            
+            int quarters = (int)(span.Days / daysInAQuarter);
+
 
             var boxWidth = width / quarters;
 
             for (int i = 0; i < quarters; i++)
             {
-                ppt.Slides[1].Shapes.AddShape(MsoAutoShapeType.msoShapeRectangle, (float)(i * boxWidth), 20, (float)boxWidth, 20);
+                var ts = ppt.Slides[1].Shapes.AddShape(MsoAutoShapeType.msoShapeRectangle, (float)(i * boxWidth), 20, (float)boxWidth, 20);
+                ts.Tags.Add("Timescale", "true");
             }
 
 
@@ -73,9 +70,15 @@ namespace ProjectChart
                 var bar = ppt.Slides[1].Shapes.AddShape(MsoAutoShapeType.msoShapeRectangle, (float)(barOffset), (40 * i) + 60, (float)barWidth, 20);
 
                 bar.Name = "Bar_" + d.Field<int>("BarID");
+                bar.Tags.Add("Bar", "true");
+                bar.Tags.Add("ID", "" + d.Field<int>("BarID"));
 
                 bar.TextFrame.TextRange.Text = d.Field<string>("Bar Name");
                 i++;
+
+                d.BeginEdit();
+                d.SetField("InChart", true);
+                d.EndEdit();
             }
 
 
@@ -83,11 +86,11 @@ namespace ProjectChart
 
         }
 
-        
+
 
         private static void CreateEvents(Presentation ppt, DataSet data)
         {
-            
+
 
             foreach (DataRow d in data.Tables["Events"].Rows)
             {
@@ -95,23 +98,31 @@ namespace ProjectChart
                 double eventWidth = 20;
                 double eventTop = 0;
                 double eventHeight = 20;
-                
-                if (!DBNull.Value.Equals(  d["ParentBar"]))
+
+                if (!DBNull.Value.Equals(d["ParentBar"]))
                 {
                     //has a parent bar?
                     eventTop = ppt.Slides[1].Shapes["Bar_" + d.Field<int>("ParentBar")].Top - eventHeight;
 
                 }
 
-                var e = ppt.Slides[1].Shapes.AddShape(MsoAutoShapeType.msoShapeDownArrow, (float)(eventOffset- (eventWidth/2)), (float)eventTop, (float)eventWidth, 20);
+                var e = ppt.Slides[1].Shapes.AddShape(MsoAutoShapeType.msoShapeDownArrow, (float)(eventOffset - (eventWidth / 2)), (float)eventTop, (float)eventWidth, 20);
                 e.Name = "Event_" + d.Field<int>("EventID");
+
+                e.Tags.Add("Event", "true");
+                e.Tags.Add("ID", "" + d.Field<int>("EventID"));
 
                 var t = ppt.Slides[1].Shapes.AddTextbox(MsoTextOrientation.msoTextOrientationHorizontal, (float)(eventOffset + (eventWidth / 2)), (float)eventTop, 100, 20);
 
+
+                t.Tags.Add("EventText", "true");
+                t.Tags.Add("ID", "" + d.Field<int>("EventID"));
                 t.TextFrame.TextRange.Text = d.Field<string>("Event Name");
-                
-                
-                
+
+
+                d.BeginEdit();
+                d.SetField("InChart", true);
+                d.EndEdit();
             }
 
         }

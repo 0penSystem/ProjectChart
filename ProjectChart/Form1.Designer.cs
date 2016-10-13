@@ -45,11 +45,14 @@
             this.label3 = new System.Windows.Forms.Label();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.SaveProject = new System.Windows.Forms.Button();
+            this.openPPTSlide = new System.Windows.Forms.Button();
             this.CreateSlideBTN = new System.Windows.Forms.Button();
+            this.UpdateSlide = new System.Windows.Forms.Button();
             this.ProjectSave = new System.Windows.Forms.SaveFileDialog();
             this.ProjectOpen = new System.Windows.Forms.OpenFileDialog();
             this.projectBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.projectDAta = new ProjectChart.ProjectDAta();
+            this.ReplaceMissing = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabBars.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.BarGrid)).BeginInit();
@@ -69,7 +72,7 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 147);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(641, 351);
+            this.tabControl1.Size = new System.Drawing.Size(699, 351);
             this.tabControl1.TabIndex = 0;
             // 
             // tabBars
@@ -79,7 +82,7 @@
             this.tabBars.Location = new System.Drawing.Point(4, 22);
             this.tabBars.Name = "tabBars";
             this.tabBars.Padding = new System.Windows.Forms.Padding(3);
-            this.tabBars.Size = new System.Drawing.Size(633, 325);
+            this.tabBars.Size = new System.Drawing.Size(691, 325);
             this.tabBars.TabIndex = 0;
             this.tabBars.Text = "Bars";
             this.tabBars.UseVisualStyleBackColor = true;
@@ -90,7 +93,7 @@
             this.BarGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.BarGrid.Location = new System.Drawing.Point(3, 3);
             this.BarGrid.Name = "BarGrid";
-            this.BarGrid.Size = new System.Drawing.Size(627, 319);
+            this.BarGrid.Size = new System.Drawing.Size(685, 319);
             this.BarGrid.TabIndex = 9;
             // 
             // label4
@@ -125,6 +128,7 @@
             // NewProject
             // 
             this.NewProject.AutoSize = true;
+            this.NewProject.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.NewProject.Location = new System.Drawing.Point(3, 3);
             this.NewProject.Name = "NewProject";
             this.NewProject.Size = new System.Drawing.Size(75, 23);
@@ -136,11 +140,12 @@
             // OpenProject
             // 
             this.OpenProject.AutoSize = true;
+            this.OpenProject.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.OpenProject.Location = new System.Drawing.Point(84, 3);
             this.OpenProject.Name = "OpenProject";
-            this.OpenProject.Size = new System.Drawing.Size(79, 23);
+            this.OpenProject.Size = new System.Drawing.Size(68, 23);
             this.OpenProject.TabIndex = 2;
-            this.OpenProject.Text = "Open Project";
+            this.OpenProject.Text = "Open XML";
             this.OpenProject.UseVisualStyleBackColor = true;
             this.OpenProject.Click += new System.EventHandler(this.OpenProject_Click);
             // 
@@ -203,35 +208,66 @@
             this.flowLayoutPanel1.Controls.Add(this.NewProject);
             this.flowLayoutPanel1.Controls.Add(this.OpenProject);
             this.flowLayoutPanel1.Controls.Add(this.SaveProject);
+            this.flowLayoutPanel1.Controls.Add(this.openPPTSlide);
             this.flowLayoutPanel1.Controls.Add(this.CreateSlideBTN);
+            this.flowLayoutPanel1.Controls.Add(this.UpdateSlide);
+            this.flowLayoutPanel1.Controls.Add(this.ReplaceMissing);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(641, 37);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(699, 44);
             this.flowLayoutPanel1.TabIndex = 10;
             // 
             // SaveProject
             // 
             this.SaveProject.AutoSize = true;
-            this.SaveProject.Location = new System.Drawing.Point(169, 3);
+            this.SaveProject.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.SaveProject.Enabled = false;
+            this.SaveProject.Location = new System.Drawing.Point(158, 3);
             this.SaveProject.Name = "SaveProject";
-            this.SaveProject.Size = new System.Drawing.Size(79, 23);
+            this.SaveProject.Size = new System.Drawing.Size(67, 23);
             this.SaveProject.TabIndex = 3;
-            this.SaveProject.Text = "Save Project";
+            this.SaveProject.Text = "Save XML";
             this.SaveProject.UseVisualStyleBackColor = true;
             this.SaveProject.Click += new System.EventHandler(this.SaveProject_Click);
+            // 
+            // openPPTSlide
+            // 
+            this.openPPTSlide.AutoSize = true;
+            this.openPPTSlide.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.openPPTSlide.Location = new System.Drawing.Point(231, 3);
+            this.openPPTSlide.Name = "openPPTSlide";
+            this.openPPTSlide.Size = new System.Drawing.Size(125, 23);
+            this.openPPTSlide.TabIndex = 5;
+            this.openPPTSlide.Text = "Open Powerpoint Slide";
+            this.openPPTSlide.UseVisualStyleBackColor = true;
+            this.openPPTSlide.Click += new System.EventHandler(this.openPPTSlide_Click);
             // 
             // CreateSlideBTN
             // 
             this.CreateSlideBTN.AutoSize = true;
+            this.CreateSlideBTN.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.CreateSlideBTN.Enabled = false;
-            this.CreateSlideBTN.Location = new System.Drawing.Point(254, 3);
+            this.CreateSlideBTN.Location = new System.Drawing.Point(362, 3);
             this.CreateSlideBTN.Name = "CreateSlideBTN";
             this.CreateSlideBTN.Size = new System.Drawing.Size(130, 23);
             this.CreateSlideBTN.TabIndex = 4;
             this.CreateSlideBTN.Text = "Create Powerpoint Slide";
             this.CreateSlideBTN.UseVisualStyleBackColor = true;
             this.CreateSlideBTN.Click += new System.EventHandler(this.button1_Click_1);
+            // 
+            // UpdateSlide
+            // 
+            this.UpdateSlide.AutoSize = true;
+            this.UpdateSlide.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.UpdateSlide.Enabled = false;
+            this.UpdateSlide.Location = new System.Drawing.Point(498, 3);
+            this.UpdateSlide.Name = "UpdateSlide";
+            this.UpdateSlide.Size = new System.Drawing.Size(78, 23);
+            this.UpdateSlide.TabIndex = 6;
+            this.UpdateSlide.Text = "Update Slide";
+            this.UpdateSlide.UseVisualStyleBackColor = true;
+            this.UpdateSlide.Click += new System.EventHandler(this.UpdateSlide_Click);
             // 
             // ProjectSave
             // 
@@ -248,11 +284,22 @@
             this.projectDAta.DataSetName = "ProjectDAta";
             this.projectDAta.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
             // 
+            // ReplaceMissing
+            // 
+            this.ReplaceMissing.Enabled = false;
+            this.ReplaceMissing.Location = new System.Drawing.Point(582, 3);
+            this.ReplaceMissing.Name = "ReplaceMissing";
+            this.ReplaceMissing.Size = new System.Drawing.Size(110, 23);
+            this.ReplaceMissing.TabIndex = 7;
+            this.ReplaceMissing.Text = "Replace Missing";
+            this.ReplaceMissing.UseVisualStyleBackColor = true;
+            this.ReplaceMissing.Click += new System.EventHandler(this.ReplaceMissing_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(641, 498);
+            this.ClientSize = new System.Drawing.Size(699, 498);
             this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -302,6 +349,9 @@
         private System.Windows.Forms.BindingSource projectBindingSource;
         private ProjectDAta projectDAta;
         private System.Windows.Forms.Button CreateSlideBTN;
+        private System.Windows.Forms.Button openPPTSlide;
+        private System.Windows.Forms.Button UpdateSlide;
+        private System.Windows.Forms.Button ReplaceMissing;
     }
 }
 
