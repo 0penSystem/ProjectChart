@@ -252,3 +252,5 @@ paket-files/
 *.sln.iml
 ProjectChart/obj/Release/*
 ProjectChart/obj/Debug/*
+*.suo
+ProjectChart/obj/Debug/TempPE/ProjectData.Designer.cs.dll
