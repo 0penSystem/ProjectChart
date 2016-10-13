@@ -364,8 +364,6 @@ namespace ProjectChart {
             
             private global::System.Data.DataColumn columnBarID;
             
-            private global::System.Data.DataColumn columnInChart;
-            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public BarsDataTable() {
@@ -433,14 +431,6 @@ namespace ProjectChart {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn InChartColumn {
-                get {
-                    return this.columnInChart;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -476,14 +466,13 @@ namespace ProjectChart {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public BarsRow AddBarsRow(string Bar_Name, System.DateTime Start_Date, System.DateTime End_Date, bool InChart) {
+            public BarsRow AddBarsRow(string Bar_Name, System.DateTime Start_Date, System.DateTime End_Date) {
                 BarsRow rowBarsRow = ((BarsRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         Bar_Name,
                         Start_Date,
                         End_Date,
-                        null,
-                        InChart};
+                        null};
                 rowBarsRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowBarsRow);
                 return rowBarsRow;
@@ -517,7 +506,6 @@ namespace ProjectChart {
                 this.columnStart_Date = base.Columns["Start Date"];
                 this.columnEnd_Date = base.Columns["End Date"];
                 this.columnBarID = base.Columns["BarID"];
-                this.columnInChart = base.Columns["InChart"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -531,15 +519,12 @@ namespace ProjectChart {
                 base.Columns.Add(this.columnEnd_Date);
                 this.columnBarID = new global::System.Data.DataColumn("BarID", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnBarID);
-                this.columnInChart = new global::System.Data.DataColumn("InChart", typeof(bool), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnInChart);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("BarsKey1", new global::System.Data.DataColumn[] {
                                 this.columnBarID}, true));
                 this.columnBarID.AutoIncrement = true;
                 this.columnBarID.AllowDBNull = false;
                 this.columnBarID.ReadOnly = true;
                 this.columnBarID.Unique = true;
-                this.columnInChart.DefaultValue = ((bool)(false));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -681,8 +666,6 @@ namespace ProjectChart {
             
             private global::System.Data.DataColumn columnParentBar;
             
-            private global::System.Data.DataColumn columnInChart;
-            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public EventsDataTable() {
@@ -750,14 +733,6 @@ namespace ProjectChart {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn InChartColumn {
-                get {
-                    return this.columnInChart;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -793,14 +768,13 @@ namespace ProjectChart {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public EventsRow AddEventsRow(string Event_Name, System.DateTime Event_Date, BarsRow parentBarsRowByBars_Events, bool InChart) {
+            public EventsRow AddEventsRow(string Event_Name, System.DateTime Event_Date, BarsRow parentBarsRowByBars_Events) {
                 EventsRow rowEventsRow = ((EventsRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         Event_Name,
                         Event_Date,
                         null,
-                        null,
-                        InChart};
+                        null};
                 if ((parentBarsRowByBars_Events != null)) {
                     columnValuesArray[3] = parentBarsRowByBars_Events[3];
                 }
@@ -837,7 +811,6 @@ namespace ProjectChart {
                 this.columnEvent_Date = base.Columns["Event Date"];
                 this.columnEventID = base.Columns["EventID"];
                 this.columnParentBar = base.Columns["ParentBar"];
-                this.columnInChart = base.Columns["InChart"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -851,14 +824,11 @@ namespace ProjectChart {
                 base.Columns.Add(this.columnEventID);
                 this.columnParentBar = new global::System.Data.DataColumn("ParentBar", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnParentBar);
-                this.columnInChart = new global::System.Data.DataColumn("InChart", typeof(bool), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnInChart);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("EventsKey1", new global::System.Data.DataColumn[] {
                                 this.columnEventID}, true));
                 this.columnEventID.AutoIncrement = true;
                 this.columnEventID.AllowDBNull = false;
                 this.columnEventID.Unique = true;
-                this.columnInChart.DefaultValue = ((bool)(false));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1335,22 +1305,6 @@ namespace ProjectChart {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool InChart {
-                get {
-                    try {
-                        return ((bool)(this[this.tableBars.InChartColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'InChart\' in table \'Bars\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableBars.InChartColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsBar_NameNull() {
                 return this.IsNull(this.tableBars.Bar_NameColumn);
             }
@@ -1383,18 +1337,6 @@ namespace ProjectChart {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetEnd_DateNull() {
                 this[this.tableBars.End_DateColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsInChartNull() {
-                return this.IsNull(this.tableBars.InChartColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetInChartNull() {
-                this[this.tableBars.InChartColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1484,22 +1426,6 @@ namespace ProjectChart {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool InChart {
-                get {
-                    try {
-                        return ((bool)(this[this.tableEvents.InChartColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'InChart\' in table \'Events\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableEvents.InChartColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public BarsRow BarsRow {
                 get {
                     return ((BarsRow)(this.GetParentRow(this.Table.ParentRelations["Bars_Events"])));
@@ -1543,18 +1469,6 @@ namespace ProjectChart {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetParentBarNull() {
                 this[this.tableEvents.ParentBarColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsInChartNull() {
-                return this.IsNull(this.tableEvents.InChartColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetInChartNull() {
-                this[this.tableEvents.InChartColumn] = global::System.Convert.DBNull;
             }
         }
         

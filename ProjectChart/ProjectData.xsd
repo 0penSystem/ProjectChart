@@ -12,29 +12,27 @@
   <xs:element name="ProjectDAta" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="ProjectDAta" msprop:Generator_UserDSName="ProjectDAta">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="Bars" msprop:Generator_TableClassName="BarsDataTable" msprop:Generator_TableVarName="tableBars" msprop:Generator_RowChangedName="BarsRowChanged" msprop:Generator_TablePropName="Bars" msprop:Generator_RowDeletingName="BarsRowDeleting" msprop:Generator_RowChangingName="BarsRowChanging" msprop:Generator_RowEvHandlerName="BarsRowChangeEventHandler" msprop:Generator_RowDeletedName="BarsRowDeleted" msprop:Generator_RowClassName="BarsRow" msprop:Generator_UserTableName="Bars" msprop:Generator_RowEvArgName="BarsRowChangeEvent">
+        <xs:element name="Bars" msprop:Generator_TableClassName="BarsDataTable" msprop:Generator_TableVarName="tableBars" msprop:Generator_TablePropName="Bars" msprop:Generator_RowDeletingName="BarsRowDeleting" msprop:Generator_RowChangingName="BarsRowChanging" msprop:Generator_RowEvHandlerName="BarsRowChangeEventHandler" msprop:Generator_RowDeletedName="BarsRowDeleted" msprop:Generator_UserTableName="Bars" msprop:Generator_RowChangedName="BarsRowChanged" msprop:Generator_RowEvArgName="BarsRowChangeEvent" msprop:Generator_RowClassName="BarsRow">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="Bar_x0020_Name" msprop:Generator_ColumnVarNameInTable="columnBar_Name" msprop:Generator_ColumnPropNameInRow="Bar_Name" msprop:Generator_ColumnPropNameInTable="Bar_NameColumn" msprop:Generator_UserColumnName="Bar Name" type="xs:string" minOccurs="0" />
               <xs:element name="Start_x0020_Date" msprop:Generator_ColumnVarNameInTable="columnStart_Date" msprop:Generator_ColumnPropNameInRow="Start_Date" msprop:Generator_ColumnPropNameInTable="Start_DateColumn" msprop:Generator_UserColumnName="Start Date" type="xs:dateTime" minOccurs="0" />
               <xs:element name="End_x0020_Date" msprop:Generator_ColumnVarNameInTable="columnEnd_Date" msprop:Generator_ColumnPropNameInRow="End_Date" msprop:Generator_ColumnPropNameInTable="End_DateColumn" msprop:Generator_UserColumnName="End Date" type="xs:dateTime" minOccurs="0" />
               <xs:element name="BarID" msdata:ReadOnly="true" msdata:AutoIncrement="true" msprop:Generator_ColumnVarNameInTable="columnBarID" msprop:Generator_ColumnPropNameInRow="BarID" msprop:Generator_ColumnPropNameInTable="BarIDColumn" msprop:Generator_UserColumnName="BarID" type="xs:int" />
-              <xs:element name="InChart" msprop:Generator_ColumnVarNameInTable="columnInChart" msprop:Generator_ColumnPropNameInRow="InChart" msprop:Generator_ColumnPropNameInTable="InChartColumn" msprop:Generator_UserColumnName="InChart" type="xs:boolean" default="false" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="Events" msprop:Generator_TableClassName="EventsDataTable" msprop:Generator_TableVarName="tableEvents" msprop:Generator_RowChangedName="EventsRowChanged" msprop:Generator_TablePropName="Events" msprop:Generator_RowDeletingName="EventsRowDeleting" msprop:Generator_RowChangingName="EventsRowChanging" msprop:Generator_RowEvHandlerName="EventsRowChangeEventHandler" msprop:Generator_RowDeletedName="EventsRowDeleted" msprop:Generator_RowClassName="EventsRow" msprop:Generator_UserTableName="Events" msprop:Generator_RowEvArgName="EventsRowChangeEvent">
+        <xs:element name="Events" msprop:Generator_TableClassName="EventsDataTable" msprop:Generator_TableVarName="tableEvents" msprop:Generator_TablePropName="Events" msprop:Generator_RowDeletingName="EventsRowDeleting" msprop:Generator_RowChangingName="EventsRowChanging" msprop:Generator_RowEvHandlerName="EventsRowChangeEventHandler" msprop:Generator_RowDeletedName="EventsRowDeleted" msprop:Generator_UserTableName="Events" msprop:Generator_RowChangedName="EventsRowChanged" msprop:Generator_RowEvArgName="EventsRowChangeEvent" msprop:Generator_RowClassName="EventsRow">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="Event_x0020_Name" msprop:Generator_ColumnVarNameInTable="columnEvent_Name" msprop:Generator_ColumnPropNameInRow="Event_Name" msprop:Generator_ColumnPropNameInTable="Event_NameColumn" msprop:Generator_UserColumnName="Event Name" type="xs:string" minOccurs="0" />
               <xs:element name="Event_x0020_Date" msprop:Generator_ColumnVarNameInTable="columnEvent_Date" msprop:Generator_ColumnPropNameInRow="Event_Date" msprop:Generator_ColumnPropNameInTable="Event_DateColumn" msprop:Generator_UserColumnName="Event Date" type="xs:dateTime" minOccurs="0" />
               <xs:element name="EventID" msdata:AutoIncrement="true" msprop:Generator_ColumnVarNameInTable="columnEventID" msprop:Generator_ColumnPropNameInRow="EventID" msprop:Generator_ColumnPropNameInTable="EventIDColumn" msprop:Generator_UserColumnName="EventID" type="xs:int" />
               <xs:element name="ParentBar" msprop:nullValue="_throw" msprop:Generator_ColumnPropNameInRow="ParentBar" msprop:Generator_ColumnVarNameInTable="columnParentBar" msprop:Generator_ColumnPropNameInTable="ParentBarColumn" msprop:Generator_UserColumnName="ParentBar" type="xs:int" minOccurs="0" />
-              <xs:element name="InChart" msprop:Generator_ColumnVarNameInTable="columnInChart" msprop:Generator_ColumnPropNameInRow="InChart" msprop:Generator_ColumnPropNameInTable="InChartColumn" msprop:Generator_UserColumnName="InChart" type="xs:boolean" default="false" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="Project" msprop:Generator_TableClassName="ProjectDataTable" msprop:Generator_TableVarName="tableProject" msprop:Generator_RowChangedName="ProjectRowChanged" msprop:Generator_TablePropName="Project" msprop:Generator_RowDeletingName="ProjectRowDeleting" msprop:Generator_RowChangingName="ProjectRowChanging" msprop:Generator_RowEvHandlerName="ProjectRowChangeEventHandler" msprop:Generator_RowDeletedName="ProjectRowDeleted" msprop:Generator_RowClassName="ProjectRow" msprop:Generator_UserTableName="Project" msprop:Generator_RowEvArgName="ProjectRowChangeEvent">
+        <xs:element name="Project" msprop:Generator_TableClassName="ProjectDataTable" msprop:Generator_TableVarName="tableProject" msprop:Generator_TablePropName="Project" msprop:Generator_RowDeletingName="ProjectRowDeleting" msprop:Generator_RowChangingName="ProjectRowChanging" msprop:Generator_RowEvHandlerName="ProjectRowChangeEventHandler" msprop:Generator_RowDeletedName="ProjectRowDeleted" msprop:Generator_UserTableName="Project" msprop:Generator_RowChangedName="ProjectRowChanged" msprop:Generator_RowEvArgName="ProjectRowChangeEvent" msprop:Generator_RowClassName="ProjectRow">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="Project_x0020_Name" msprop:Generator_ColumnVarNameInTable="columnProject_Name" msprop:Generator_ColumnPropNameInRow="Project_Name" msprop:Generator_ColumnPropNameInTable="Project_NameColumn" msprop:Generator_UserColumnName="Project Name" type="xs:string" minOccurs="0" />
@@ -56,7 +54,7 @@
   </xs:element>
   <xs:annotation>
     <xs:appinfo>
-      <msdata:Relationship name="Bars_Events" msdata:parent="Bars" msdata:child="Events" msdata:parentkey="BarID" msdata:childkey="ParentBar" msprop:Generator_UserChildTable="Events" msprop:Generator_ChildPropName="GetEventsRows" msprop:Generator_UserRelationName="Bars_Events" msprop:Generator_RelationVarName="relationBars_Events" msprop:Generator_UserParentTable="Bars" msprop:Generator_ParentPropName="BarsRow" />
+      <msdata:Relationship name="Bars_Events" msdata:parent="Bars" msdata:child="Events" msdata:parentkey="BarID" msdata:childkey="ParentBar" msprop:Generator_UserChildTable="Events" msprop:Generator_ChildPropName="GetEventsRows" msprop:Generator_UserRelationName="Bars_Events" msprop:Generator_ParentPropName="BarsRow" msprop:Generator_RelationVarName="relationBars_Events" msprop:Generator_UserParentTable="Bars" />
     </xs:appinfo>
   </xs:annotation>
 </xs:schema>
