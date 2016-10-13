@@ -61,29 +61,28 @@ namespace ProjectChart
 
             int i = 0;
 
-            foreach (DataRow d in data.Tables["Bars"].Rows)
+            var query = from DataRow d in data.Tables["Bars"].AsEnumerable() select new { Start = d.Field<DateTime>("Start Date"), End = d.Field<DateTime>("End Date"), ID = d.Field<int>("BarID"), Name = d.Field<string>("Bar Name"), Data = d };
+
+            foreach (var bar in query)
             {
-                TimeSpan barSpan = d.Field<DateTime>("End Date") - d.Field<DateTime>("Start Date");
+                TimeSpan barSpan = bar.End - bar.Start;
                 double barWidth = barSpan.TotalSeconds * TIME_TO_WIDTH;
-                double barOffset = (d.Field<DateTime>("Start Date") - P_START).TotalSeconds * TIME_TO_WIDTH;
+                double barOffset = (bar.Start - P_START).TotalSeconds * TIME_TO_WIDTH;
 
-                var bar = ppt.Slides[1].Shapes.AddShape(MsoAutoShapeType.msoShapeRectangle, (float)(barOffset), (40 * i) + 60, (float)barWidth, 20);
+                var b = ppt.Slides[1].Shapes.AddShape(MsoAutoShapeType.msoShapeRectangle, (float)(barOffset), (40 * i) + 60, (float)barWidth, 20);
 
-                bar.Name = "Bar_" + d.Field<int>("BarID");
-                bar.Tags.Add("Bar", "true");
-                bar.Tags.Add("ID", "" + d.Field<int>("BarID"));
+                b.Name = "Bar_" + bar.ID;
+                b.Tags.Add("Bar", "true");
+                b.Tags.Add("ID", "" + bar.ID);
 
-                bar.TextFrame.TextRange.Text = d.Field<string>("Bar Name");
+                b.TextFrame.TextRange.Text = bar.Name;
                 i++;
 
-                d.BeginEdit();
-                d.SetField("InChart", true);
-                d.EndEdit();
+                bar.Data.BeginEdit();
+                bar.Data.SetField("InChart", true);
+                bar.Data.EndEdit();
+
             }
-
-
-
-
         }
 
 
@@ -91,39 +90,42 @@ namespace ProjectChart
         private static void CreateEvents(Presentation ppt, DataSet data)
         {
 
+            var query = from DataRow d in data.Tables["Events"].AsEnumerable() select new { Date = d.Field<DateTime>("Event Date"), ID = d.Field<int>("EventID"), Name = d.Field<string>("Event Name"), Data = d };
 
-            foreach (DataRow d in data.Tables["Events"].Rows)
+            foreach (var @event in query)
             {
-                double eventOffset = (d.Field<DateTime>("Event Date") - P_START).TotalSeconds * TIME_TO_WIDTH;
+                double eventOffset = (@event.Date - P_START).TotalSeconds * TIME_TO_WIDTH;
                 double eventWidth = 20;
                 double eventTop = 0;
                 double eventHeight = 20;
 
-                if (!DBNull.Value.Equals(d["ParentBar"]))
+
+                if (!DBNull.Value.Equals(@event.Data["ParentBar"]))
                 {
                     //has a parent bar?
-                    eventTop = ppt.Slides[1].Shapes["Bar_" + d.Field<int>("ParentBar")].Top - eventHeight;
-
+                    eventTop = ppt.Slides[1].Shapes["Bar_" + @event.Data.Field<int>("ParentBar")].Top - eventHeight;
                 }
 
+
                 var e = ppt.Slides[1].Shapes.AddShape(MsoAutoShapeType.msoShapeDownArrow, (float)(eventOffset - (eventWidth / 2)), (float)eventTop, (float)eventWidth, 20);
-                e.Name = "Event_" + d.Field<int>("EventID");
+                e.Name = "Event_" + @event.ID;
 
                 e.Tags.Add("Event", "true");
-                e.Tags.Add("ID", "" + d.Field<int>("EventID"));
+                e.Tags.Add("ID", "" + @event.ID);
 
                 var t = ppt.Slides[1].Shapes.AddTextbox(MsoTextOrientation.msoTextOrientationHorizontal, (float)(eventOffset + (eventWidth / 2)), (float)eventTop, 100, 20);
 
 
                 t.Tags.Add("EventText", "true");
-                t.Tags.Add("ID", "" + d.Field<int>("EventID"));
-                t.TextFrame.TextRange.Text = d.Field<string>("Event Name");
+                t.Tags.Add("ID", "" + @event.ID);
+                t.TextFrame.TextRange.Text = @event.Name;
 
 
-                d.BeginEdit();
-                d.SetField("InChart", true);
-                d.EndEdit();
+                @event.Data.BeginEdit();
+                @event.Data.SetField("InChart", true);
+                @event.Data.EndEdit();
             }
+
 
         }
 

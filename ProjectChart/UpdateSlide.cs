@@ -28,65 +28,69 @@ namespace ProjectChart
 
         private static void ReplaceEvents(Presentation ppt, DataSet data)
         {
-            foreach (DataRow d in data.Tables["Events"].Rows)
+            var query = from DataRow d in data.Tables["Events"].AsEnumerable() where !d.Field<bool>("InChart") select new { Date = d.Field<DateTime>("Event Date"), ID = d.Field<int>("EventID"), Name = d.Field<string>("Event Name"), Data = d };
+
+            foreach (var @event in query)
             {
-                if (!d.Field<bool>("InChart"))
+                double eventOffset = (@event.Date - P_START).TotalSeconds * TIME_TO_WIDTH;
+                double eventWidth = 20;
+                double eventTop = 0;
+                double eventHeight = 20;
+
+
+                if (!DBNull.Value.Equals(@event.Data["ParentBar"]))
                 {
-                    double eventOffset = (d.Field<DateTime>("Event Date") - P_START).TotalSeconds * TIME_TO_WIDTH;
-                    double eventWidth = 20;
-                    double eventTop = 0;
-                    double eventHeight = 20;
-
-                    if (!DBNull.Value.Equals(d["ParentBar"]))
-                    {
-                        //has a parent bar?
-                        eventTop = ppt.Slides[1].Shapes["Bar_" + d.Field<int>("ParentBar")].Top - eventHeight;
-
-                    }
-
-                    var e = ppt.Slides[1].Shapes.AddShape(MsoAutoShapeType.msoShapeDownArrow, (float)(eventOffset - (eventWidth / 2)), (float)eventTop, (float)eventWidth, 20);
-                    e.Name = "Event_" + d.Field<int>("EventID");
-
-                    e.Tags.Add("Event", "true");
-                    e.Tags.Add("ID", "" + d.Field<int>("EventID"));
-
-                    var t = ppt.Slides[1].Shapes.AddTextbox(MsoTextOrientation.msoTextOrientationHorizontal, (float)(eventOffset + (eventWidth / 2)), (float)eventTop, 100, 20);
-
-
-                    t.Tags.Add("EventText", "true");
-                    t.Tags.Add("ID", "" + d.Field<int>("EventID"));
-                    t.TextFrame.TextRange.Text = d.Field<string>("Event Name");
-
-                    d.BeginEdit();
-                    d.SetField("InChart", true);
-                    d.EndEdit(); 
+                    //has a parent bar?
+                    eventTop = ppt.Slides[1].Shapes["Bar_" + @event.Data.Field<int>("ParentBar")].Top - eventHeight;
                 }
+
+
+                var e = ppt.Slides[1].Shapes.AddShape(MsoAutoShapeType.msoShapeDownArrow, (float)(eventOffset - (eventWidth / 2)), (float)eventTop, (float)eventWidth, 20);
+                e.Name = "Event_" + @event.ID;
+
+                e.Tags.Add("Event", "true");
+                e.Tags.Add("ID", "" + @event.ID);
+
+                var t = ppt.Slides[1].Shapes.AddTextbox(MsoTextOrientation.msoTextOrientationHorizontal, (float)(eventOffset + (eventWidth / 2)), (float)eventTop, 100, 20);
+
+
+                t.Tags.Add("EventText", "true");
+                t.Tags.Add("ID", "" + @event.ID);
+                t.TextFrame.TextRange.Text = @event.Name;
+
+
+                @event.Data.BeginEdit();
+                @event.Data.SetField("InChart", true);
+                @event.Data.EndEdit();
             }
+
         }
 
         private static void ReplaceBars(Presentation ppt, DataSet data)
         {
-            foreach (DataRow d in data.Tables["Bars"].Rows)
+            var query = from d in data.Tables["Bars"].AsEnumerable()
+                        where !d.Field<bool>("InChart")
+                        select new { Start = d.Field<DateTime>("Start Date"), End = d.Field<DateTime>("End Date"), ID = d.Field<int>("BarID"), Name = d.Field<string>("Bar Name"), Data = d };
+
+
+            foreach (var bar in query)
             {
-                if (!d.Field<bool>("InChart"))
-                {
-                    TimeSpan barSpan = d.Field<DateTime>("End Date") - d.Field<DateTime>("Start Date");
-                    double barWidth = barSpan.TotalSeconds * TIME_TO_WIDTH;
-                    double barOffset = (d.Field<DateTime>("Start Date") - P_START).TotalSeconds * TIME_TO_WIDTH;
+                TimeSpan barSpan = bar.End - bar.Start;
+                double barWidth = barSpan.TotalSeconds * TIME_TO_WIDTH;
+                double barOffset = (bar.Start - P_START).TotalSeconds * TIME_TO_WIDTH;
 
-                    var bar = ppt.Slides[1].Shapes.AddShape(MsoAutoShapeType.msoShapeRectangle, (float)(barOffset), (40 * d.Field<int>("BarID")) + 60, (float)barWidth, 20);
+                var b = ppt.Slides[1].Shapes.AddShape(MsoAutoShapeType.msoShapeRectangle, (float)(barOffset), (40 * bar.ID) + 60, (float)barWidth, 20);
 
-                    bar.Name = "Bar_" + d.Field<int>("BarID");
-                    bar.Tags.Add("Bar", "true");
-                    bar.Tags.Add("ID", "" + d.Field<int>("BarID"));
+                b.Name = "Bar_" + bar.ID;
+                b.Tags.Add("Bar", "true");
+                b.Tags.Add("ID", "" + bar.ID);
 
-                    bar.TextFrame.TextRange.Text = d.Field<string>("Bar Name");
+                b.TextFrame.TextRange.Text = bar.Name;
 
-                    d.BeginEdit();
-                    d.SetField("InChart", true);
-                    d.EndEdit();
-                }
-                
+                bar.Data.BeginEdit();
+                bar.Data.SetField("InChart", true);
+                bar.Data.EndEdit();
+
             }
         }
 
@@ -135,41 +139,35 @@ namespace ProjectChart
         {
             var shapes = ppt.Slides[1].Shapes;
 
-
             foreach (DataRow d in data.Tables["Bars"].Rows)
             {
-                bool found = false;
-                foreach (Microsoft.Office.Interop.PowerPoint.Shape s in shapes)
-                {
-                    if (s.Tags?["Bar"] == "true")
-                    {
-                        //is a bar
-                        if (d.Field<int>("BarID") == int.Parse(s.Tags["ID"]))
-                        {
-                            found = true;
-                            //matching shape, update it.
-                            TimeSpan barSpan = d.Field<DateTime>("End Date") - d.Field<DateTime>("Start Date");
-                            double barWidth = barSpan.TotalSeconds * TIME_TO_WIDTH;
-                            double barOffset = (d.Field<DateTime>("Start Date") - P_START).TotalSeconds * TIME_TO_WIDTH;
-
-                            s.Left = (float)barOffset;
-                            s.Width = (float)barWidth;
-
-
-                            s.TextFrame.TextRange.Text = d.Field<string>("Bar Name");
-                        }
-                    }
-
-
-                }
-                if (!found)
-                {
-                    d.BeginEdit();
-                    d.SetField("InChart", false);
-                    d.EndEdit();
-                }
-
+                d.BeginEdit();
+                d.SetField<bool>("InChart", false);
+                d.EndEdit();
             }
+
+            var query = from Microsoft.Office.Interop.PowerPoint.Shape s in shapes
+                        where s.Tags?["Bar"] == "true"
+                        join d in data.Tables["Bars"].AsEnumerable() on int.Parse(s.Tags["ID"]) equals d.Field<int>("BarID")
+                        select new { End = d.Field<DateTime>("End Date"), Start = d.Field<DateTime>("Start Date"), Name = d.Field<string>("Bar Name"), Shape = s, Data = d };
+
+            foreach (var x in query)
+            {
+                TimeSpan barSpan = x.End - x.Start;
+                double barWidth = barSpan.TotalSeconds * TIME_TO_WIDTH;
+                double barOffset = (x.Start - P_START).TotalSeconds * TIME_TO_WIDTH;
+
+                x.Shape.Left = (float)barOffset;
+                x.Shape.Width = (float)barWidth;
+
+
+                x.Shape.TextFrame.TextRange.Text = x.Name;
+
+                x.Data.BeginEdit();
+                x.Data.SetField<bool>("InChart", true);
+                x.Data.EndEdit();
+            }
+
 
 
 
@@ -183,78 +181,64 @@ namespace ProjectChart
 
             var shapes = ppt.Slides[1].Shapes;
 
+
             foreach (DataRow d in data.Tables["Events"].Rows)
             {
-                bool found = false;
+                d.BeginEdit();
+                d.SetField<bool>("InChart", false);
+                d.EndEdit();
+            }
 
-                foreach (Microsoft.Office.Interop.PowerPoint.Shape s in shapes)
+            var query = from Microsoft.Office.Interop.PowerPoint.Shape s in shapes
+                        where s.Tags?["Event"] == "true"
+                        join Microsoft.Office.Interop.PowerPoint.Shape s2 in shapes on s.Tags["ID"] equals s2.Tags["ID"]
+                        where s2.Tags?["EventText"] == "true"
+                        join d in data.Tables["Events"].AsEnumerable() on int.Parse(s.Tags["ID"]) equals d.Field<int>("EventID")
+
+                        select new { Date = d.Field<DateTime>("Event Date"), Name = d.Field<string>("Event Name"), Shape = s, Text = s2, Data = d, ID = d.Field<int>("EventID") };
+
+
+            foreach (var x in query)
+            {
+                double eventOffset = (x.Date - P_START).TotalSeconds * TIME_TO_WIDTH;
+                double eventHeight = 20;
+
+
+                if (!DBNull.Value.Equals(x.Data["ParentBar"]))
                 {
-                    if (s.Tags?["Event"] == "true")
+
+
+                    //has a parent bar?
+                    foreach (Microsoft.Office.Interop.PowerPoint.Shape S in ppt.Slides[1].Shapes)
                     {
-                        //is an event
-                        if (d.Field<int>("EventID") == int.Parse(s.Tags["ID"]))
+                        if (S.Tags?["Bar"] != "true")
                         {
-                            //matching shape, update it.
-                            double eventOffset = (d.Field<DateTime>("Event Date") - P_START).TotalSeconds * TIME_TO_WIDTH;
-                            double eventHeight = 20;
+                            continue;
+                        }
 
-                            if (!DBNull.Value.Equals(d["ParentBar"]))
-                            {
-
-
-                                //has a parent bar?
-                                foreach (Microsoft.Office.Interop.PowerPoint.Shape S in ppt.Slides[1].Shapes)
-                                {
-                                    if (S.Tags?["Bar"] != "true")
-                                    {
-                                        continue;
-                                    }
-
-                                    if (int.Parse(S.Tags["ID"]) == d.Field<int>("ParentBar"))
-                                    {
-                                        s.Top = (float)(S.Top - eventHeight);
-                                        break;
-                                    }
-                                }
-
-
-                            }
-
-                            s.Left = (float)eventOffset - (s.Width / 2);
-
-                            foreach (Microsoft.Office.Interop.PowerPoint.Shape t in shapes)
-                            {
-                                if (t.Tags?["EventText"] == "true")
-                                {
-                                    //Debug.Print(t.Tags.ToString());
-                                    if (d.Field<int>("EventID") == int.Parse(t.Tags["ID"]))
-                                    {
-                                        //found matching textbox
-                                        t.Left = s.Left + s.Width;
-                                        t.Top = s.Top;
-                                        t.TextFrame.TextRange.Text = d.Field<string>("Event Name");
-                                    }
-                                }
-                            }
-
-
+                        if (int.Parse(S.Tags["ID"]) == x.Data.Field<int>("ParentBar"))
+                        {
+                            x.Shape.Top = (float)(S.Top - eventHeight);
+                            break;
                         }
                     }
 
 
                 }
 
-                if (!found)
-                {
-                    d.BeginEdit();
-                    d.SetField("InChart", false);
-                    d.EndEdit();
-                }
+                x.Shape.Left = (float)eventOffset - (x.Shape.Width / 2);
 
+                x.Text.Left = x.Shape.Left + x.Shape.Width;
+                x.Text.Top = x.Shape.Top;
+                x.Text.TextFrame.TextRange.Text = x.Name;
+
+                x.Data.BeginEdit();
+                x.Data.SetField<bool>("InChart", true);
+                x.Data.EndEdit();
             }
-
         }
-
-
     }
 }
+
+
+

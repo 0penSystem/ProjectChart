@@ -10,3 +10,4 @@ C:\Users\evanm\Documents\GitHub\ProjectChart\ProjectChart\obj\Debug\ProjectChart
 C:\Users\evanm\Documents\GitHub\ProjectChart\ProjectChart\obj\Debug\ProjectChart.csproj.GenerateResource.Cache
 C:\Users\evanm\Documents\GitHub\ProjectChart\ProjectChart\obj\Debug\ProjectChart.exe
 C:\Users\evanm\Documents\GitHub\ProjectChart\ProjectChart\obj\Debug\ProjectChart.pdb
+C:\Users\evanm\Documents\GitHub\ProjectChart\ProjectChart\obj\Debug\ProjectChart.csprojResolveAssemblyReference.cache
