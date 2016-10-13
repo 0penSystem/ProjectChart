@@ -38,7 +38,7 @@ namespace ProjectChart
             }
         }
 
-        
+
 
         public Form1()
         {
@@ -47,6 +47,13 @@ namespace ProjectChart
 
             Powerpoint = Powerpoint ?? new Microsoft.Office.Interop.PowerPoint.Application();
             Powerpoint.PresentationBeforeSave += Powerpoint_PresentationBeforeSave;
+            Powerpoint.PresentationClose += Powerpoint_PresentationClose;
+        }
+
+        private void Powerpoint_PresentationClose(Presentation Pres)
+        {
+            UpdateSlide.Enabled = false;
+            ReplaceMissing.Enabled = false;
         }
 
         private void ActivateControls()
@@ -59,7 +66,6 @@ namespace ProjectChart
             EventGrid.DataSource = currentProject.data.Tables["Events"];
             CreateSlideBTN.Enabled = true;
             SaveProject.Enabled = true;
-            UpdateSlide.Enabled = true;
         }
 
 
@@ -97,7 +103,7 @@ namespace ProjectChart
 
         private void UpdateBarList()
         {
-            
+
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -105,7 +111,7 @@ namespace ProjectChart
 
         }
 
-       
+
         private void projectBindingSource_CurrentChanged(object sender, EventArgs e)
         {
 
@@ -115,7 +121,7 @@ namespace ProjectChart
         {
 
         }
-        
+
         private void EventGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
@@ -123,12 +129,12 @@ namespace ProjectChart
 
         private void saveFileDialog1_FileOk(object sender, CancelEventArgs e)
         {
-            
+
         }
 
         private void SaveProject_Click(object sender, EventArgs e)
         {
-           DialogResult d = ProjectSave.ShowDialog();
+            DialogResult d = ProjectSave.ShowDialog();
             if (d == DialogResult.OK)
             {
 
@@ -143,26 +149,28 @@ namespace ProjectChart
             {
 
 
-                ActivateControls();
+                //ActivateControls();
                 currentProject = new Project(ProjectOpen.FileName);
                 ActivateControls();
 
                 textBoxProjectName.Text = currentProject.data.Tables["Project"].Rows[0].Field<string>("Project Name");
                 StartDatePicker.Value = currentProject.data.Tables["Project"].Rows[0].Field<DateTime>("Start Date");
                 EndDatePicker.Value = currentProject.data.Tables["Project"].Rows[0].Field<DateTime>("End Date");
+
             }
         }
 
         private void button1_Click_1(object sender, EventArgs e)
         {
-            //TODO: IMPLEMENT POWERPOINT CODE
             Powerpoint = Powerpoint ?? new Microsoft.Office.Interop.PowerPoint.Application();
             ppt = Powerpoint.Presentations.Add(Microsoft.Office.Core.MsoTriState.msoTrue);
 
 
             CreateModule.CreateChart(ppt, currentProject.data);
 
+            UpdateSlide.Enabled = true;
 
+            ReplaceMissing.Enabled = true;
         }
 
         private void Powerpoint_PresentationBeforeSave(Presentation Pres, ref bool Cancel)
@@ -170,7 +178,7 @@ namespace ProjectChart
             Pres.Tags.Delete("ProjectData");
             Pres.Tags.Add("ProjectData", currentProject.data.GetXml());
         }
-        
+
 
         private void openPPTSlide_Click(object sender, EventArgs e)
         {
@@ -179,7 +187,7 @@ namespace ProjectChart
             {
                 Powerpoint = Powerpoint ?? new Microsoft.Office.Interop.PowerPoint.Application();
                 ppt = Powerpoint.Presentations.Open(ProjectOpen.FileName);
-                
+
 
                 ActivateControls();
 
@@ -198,12 +206,25 @@ namespace ProjectChart
 
                 BarGrid.DataSource = currentProject.data.Tables["Bars"];
                 EventGrid.DataSource = currentProject.data.Tables["Events"];
+                UpdateSlide.Enabled = true;
+
+                ReplaceMissing.Enabled = true;
             }
         }
 
         private void UpdateSlide_Click(object sender, EventArgs e)
         {
             UpdateModule.UpdateChart(ppt, currentProject.data);
+        }
+
+        private void ReplaceMissing_Click(object sender, EventArgs e)
+        {
+            if (Powerpoint.Windows.Count == 0)
+            {
+                ReplaceMissing.Enabled = false;
+                return;
+            }
+            UpdateModule.ReplaceMissing(ppt, currentProject.data);
         }
     }
 }
