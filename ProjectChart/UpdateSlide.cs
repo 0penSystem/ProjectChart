@@ -202,6 +202,8 @@ namespace ProjectChart
             {
                 double eventOffset = (x.Date - P_START).TotalSeconds * TIME_TO_WIDTH;
                 double eventHeight = 20;
+                float textOffsetTop = x.Text.Top - x.Shape.Top;
+                float textOffsetLeft = x.Text.Left - x.Shape.Left;
 
 
                 if (!DBNull.Value.Equals(x.Data["ParentBar"]))
@@ -228,8 +230,8 @@ namespace ProjectChart
 
                 x.Shape.Left = (float)eventOffset - (x.Shape.Width / 2);
 
-                x.Text.Left = x.Shape.Left + x.Shape.Width;
-                x.Text.Top = x.Shape.Top;
+                x.Text.Left = x.Shape.Left + textOffsetLeft;
+                x.Text.Top = x.Shape.Top + textOffsetTop;
                 x.Text.TextFrame.TextRange.Text = x.Name;
 
                 x.Data.BeginEdit();
