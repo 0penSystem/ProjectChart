@@ -683,6 +683,10 @@ namespace ProjectChart {
             
             private global::System.Data.DataColumn columnInChart;
             
+            private global::System.Data.DataColumn columnShape;
+            
+            private global::System.Data.DataColumn columnLocation;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public EventsDataTable() {
@@ -758,6 +762,22 @@ namespace ProjectChart {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn ShapeColumn {
+                get {
+                    return this.columnShape;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn LocationColumn {
+                get {
+                    return this.columnLocation;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -793,14 +813,16 @@ namespace ProjectChart {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public EventsRow AddEventsRow(string Event_Name, System.DateTime Event_Date, BarsRow parentBarsRowByBars_Events, bool InChart) {
+            public EventsRow AddEventsRow(string Event_Name, System.DateTime Event_Date, BarsRow parentBarsRowByBars_Events, bool InChart, int Shape, int Location) {
                 EventsRow rowEventsRow = ((EventsRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         Event_Name,
                         Event_Date,
                         null,
                         null,
-                        InChart};
+                        InChart,
+                        Shape,
+                        Location};
                 if ((parentBarsRowByBars_Events != null)) {
                     columnValuesArray[3] = parentBarsRowByBars_Events[3];
                 }
@@ -838,6 +860,8 @@ namespace ProjectChart {
                 this.columnEventID = base.Columns["EventID"];
                 this.columnParentBar = base.Columns["ParentBar"];
                 this.columnInChart = base.Columns["InChart"];
+                this.columnShape = base.Columns["Shape"];
+                this.columnLocation = base.Columns["Location"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -853,6 +877,10 @@ namespace ProjectChart {
                 base.Columns.Add(this.columnParentBar);
                 this.columnInChart = new global::System.Data.DataColumn("InChart", typeof(bool), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnInChart);
+                this.columnShape = new global::System.Data.DataColumn("Shape", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnShape);
+                this.columnLocation = new global::System.Data.DataColumn("Location", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnLocation);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("EventsKey1", new global::System.Data.DataColumn[] {
                                 this.columnEventID}, true));
                 this.columnEventID.AutoIncrement = true;
@@ -1500,6 +1528,38 @@ namespace ProjectChart {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int Shape {
+                get {
+                    try {
+                        return ((int)(this[this.tableEvents.ShapeColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Shape\' in table \'Events\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableEvents.ShapeColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int Location {
+                get {
+                    try {
+                        return ((int)(this[this.tableEvents.LocationColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Location\' in table \'Events\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableEvents.LocationColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public BarsRow BarsRow {
                 get {
                     return ((BarsRow)(this.GetParentRow(this.Table.ParentRelations["Bars_Events"])));
@@ -1555,6 +1615,30 @@ namespace ProjectChart {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetInChartNull() {
                 this[this.tableEvents.InChartColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsShapeNull() {
+                return this.IsNull(this.tableEvents.ShapeColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetShapeNull() {
+                this[this.tableEvents.ShapeColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsLocationNull() {
+                return this.IsNull(this.tableEvents.LocationColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetLocationNull() {
+                this[this.tableEvents.LocationColumn] = global::System.Convert.DBNull;
             }
         }
         

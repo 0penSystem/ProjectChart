@@ -14,7 +14,7 @@ using System.Diagnostics;
 
 namespace ProjectChart
 {
-    public partial class MainForm : Form
+    public partial class OldMainForm : Form
     {
 
 
@@ -40,7 +40,7 @@ namespace ProjectChart
 
 
 
-        public MainForm()
+        public OldMainForm()
         {
             InitializeComponent();
 

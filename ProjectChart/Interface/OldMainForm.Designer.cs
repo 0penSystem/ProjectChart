@@ -1,6 +1,6 @@
 ﻿namespace ProjectChart
 {
-    partial class MainForm
+    partial class OldMainForm
     {
         /// <summary>
         /// Required designer variable.
