@@ -49,10 +49,14 @@
             this.dtEnd = new System.Windows.Forms.DateTimePicker();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.loadFromXmlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.miFileLoadXml = new System.Windows.Forms.ToolStripMenuItem();
-            this.miFileLoadPowerpoint = new System.Windows.Forms.ToolStripMenuItem();
             this.openXML = new System.Windows.Forms.OpenFileDialog();
+            this.miProjectUpdate = new System.Windows.Forms.ToolStripMenuItem();
+            this.miProjectReplace = new System.Windows.Forms.ToolStripMenuItem();
+            this.openPPT = new System.Windows.Forms.OpenFileDialog();
+            this.miFileLoadXml = new System.Windows.Forms.ToolStripMenuItem();
+            this.miFileOpenPPT = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.miProjectCreate = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -67,15 +71,17 @@
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(304, 24);
-            this.menuStrip1.TabIndex = 0;
+            this.menuStrip1.TabIndex = 3;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.miFileNew,
+            this.miFileOpenPPT,
+            this.toolStripSeparator2,
             this.saveXMLToolStripMenuItem,
-            this.loadFromXmlToolStripMenuItem,
+            this.miFileLoadXml,
             this.toolStripSeparator1,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
@@ -85,31 +91,35 @@
             // miFileNew
             // 
             this.miFileNew.Name = "miFileNew";
-            this.miFileNew.Size = new System.Drawing.Size(152, 22);
+            this.miFileNew.Size = new System.Drawing.Size(167, 22);
             this.miFileNew.Text = "&New Project";
             this.miFileNew.Click += new System.EventHandler(this.miFileNew_Click);
             // 
             // saveXMLToolStripMenuItem
             // 
             this.saveXMLToolStripMenuItem.Name = "saveXMLToolStripMenuItem";
-            this.saveXMLToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveXMLToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.saveXMLToolStripMenuItem.Text = "&Save XML";
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(164, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.exitToolStripMenuItem.Text = "E&xit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // projectToolStripMenuItem
             // 
+            this.projectToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.miProjectCreate,
+            this.miProjectUpdate,
+            this.miProjectReplace});
             this.projectToolStripMenuItem.Name = "projectToolStripMenuItem";
             this.projectToolStripMenuItem.Size = new System.Drawing.Size(56, 20);
             this.projectToolStripMenuItem.Text = "&Project";
@@ -126,14 +136,14 @@
             // miBarAdd
             // 
             this.miBarAdd.Name = "miBarAdd";
-            this.miBarAdd.Size = new System.Drawing.Size(117, 22);
+            this.miBarAdd.Size = new System.Drawing.Size(152, 22);
             this.miBarAdd.Text = "&Add";
             this.miBarAdd.Click += new System.EventHandler(this.miBarAdd_Click);
             // 
             // miBarManage
             // 
             this.miBarManage.Name = "miBarManage";
-            this.miBarManage.Size = new System.Drawing.Size(117, 22);
+            this.miBarManage.Size = new System.Drawing.Size(152, 22);
             this.miBarManage.Text = "&Manage";
             this.miBarManage.Click += new System.EventHandler(this.miBarManage_Click);
             // 
@@ -149,14 +159,14 @@
             // miEventAdd
             // 
             this.miEventAdd.Name = "miEventAdd";
-            this.miEventAdd.Size = new System.Drawing.Size(117, 22);
+            this.miEventAdd.Size = new System.Drawing.Size(152, 22);
             this.miEventAdd.Text = "&Add";
             this.miEventAdd.Click += new System.EventHandler(this.miEventAdd_Click);
             // 
             // miEventsManage
             // 
             this.miEventsManage.Name = "miEventsManage";
-            this.miEventsManage.Size = new System.Drawing.Size(117, 22);
+            this.miEventsManage.Size = new System.Drawing.Size(152, 22);
             this.miEventsManage.Text = "&Manage";
             this.miEventsManage.Click += new System.EventHandler(this.miEventsManage_Click);
             // 
@@ -171,7 +181,7 @@
             // miHelpAbout
             // 
             this.miHelpAbout.Name = "miHelpAbout";
-            this.miHelpAbout.Size = new System.Drawing.Size(107, 22);
+            this.miHelpAbout.Size = new System.Drawing.Size(152, 22);
             this.miHelpAbout.Text = "&About";
             this.miHelpAbout.Click += new System.EventHandler(this.miHelpAbout_Click);
             // 
@@ -181,7 +191,7 @@
             this.label1.Location = new System.Drawing.Point(12, 38);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(71, 13);
-            this.label1.TabIndex = 1;
+            this.label1.TabIndex = 4;
             this.label1.Text = "Project Name";
             // 
             // txtName
@@ -189,21 +199,21 @@
             this.txtName.Location = new System.Drawing.Point(89, 35);
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(200, 20);
-            this.txtName.TabIndex = 2;
+            this.txtName.TabIndex = 0;
             // 
             // dtStart
             // 
             this.dtStart.Location = new System.Drawing.Point(89, 61);
             this.dtStart.Name = "dtStart";
             this.dtStart.Size = new System.Drawing.Size(200, 20);
-            this.dtStart.TabIndex = 3;
+            this.dtStart.TabIndex = 1;
             // 
             // dtEnd
             // 
             this.dtEnd.Location = new System.Drawing.Point(89, 87);
             this.dtEnd.Name = "dtEnd";
             this.dtEnd.Size = new System.Drawing.Size(200, 20);
-            this.dtEnd.TabIndex = 4;
+            this.dtEnd.TabIndex = 2;
             // 
             // label2
             // 
@@ -223,27 +233,50 @@
             this.label3.TabIndex = 6;
             this.label3.Text = "End Date";
             // 
-            // loadFromXmlToolStripMenuItem
+            // miProjectUpdate
             // 
-            this.loadFromXmlToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miFileLoadXml,
-            this.miFileLoadPowerpoint});
-            this.loadFromXmlToolStripMenuItem.Name = "loadFromXmlToolStripMenuItem";
-            this.loadFromXmlToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.loadFromXmlToolStripMenuItem.Text = "&Load";
+            this.miProjectUpdate.Name = "miProjectUpdate";
+            this.miProjectUpdate.Size = new System.Drawing.Size(159, 22);
+            this.miProjectUpdate.Text = "&Update Slide";
+            this.miProjectUpdate.Click += new System.EventHandler(this.miProjectUpdate_Click);
+            // 
+            // miProjectReplace
+            // 
+            this.miProjectReplace.Name = "miProjectReplace";
+            this.miProjectReplace.Size = new System.Drawing.Size(159, 22);
+            this.miProjectReplace.Text = "Replace &Missing";
+            this.miProjectReplace.Click += new System.EventHandler(this.miProjectReplace_Click);
+            // 
+            // openPPT
+            // 
+            this.openPPT.DefaultExt = "pptx";
+            this.openPPT.Filter = "\"Powerpoint Files|*.ppt,*.pptx\"";
             // 
             // miFileLoadXml
             // 
             this.miFileLoadXml.Name = "miFileLoadXml";
-            this.miFileLoadXml.Size = new System.Drawing.Size(152, 22);
-            this.miFileLoadXml.Text = "From &XML";
+            this.miFileLoadXml.Size = new System.Drawing.Size(167, 22);
+            this.miFileLoadXml.Text = "&Load XML";
             this.miFileLoadXml.Click += new System.EventHandler(this.miFileLoadXml_Click);
             // 
-            // miFileLoadPowerpoint
+            // miFileOpenPPT
             // 
-            this.miFileLoadPowerpoint.Name = "miFileLoadPowerpoint";
-            this.miFileLoadPowerpoint.Size = new System.Drawing.Size(152, 22);
-            this.miFileLoadPowerpoint.Text = "Powerpoint";
+            this.miFileOpenPPT.Name = "miFileOpenPPT";
+            this.miFileOpenPPT.Size = new System.Drawing.Size(167, 22);
+            this.miFileOpenPPT.Text = "Open &Powerpoint";
+            this.miFileOpenPPT.Click += new System.EventHandler(this.miFileOpenPPT_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(164, 6);
+            // 
+            // miProjectCreate
+            // 
+            this.miProjectCreate.Name = "miProjectCreate";
+            this.miProjectCreate.Size = new System.Drawing.Size(159, 22);
+            this.miProjectCreate.Text = "&Create Slide";
+            this.miProjectCreate.Click += new System.EventHandler(this.miProjectCreate_Click);
             // 
             // MainForm
             // 
@@ -291,9 +324,13 @@
         private System.Windows.Forms.ToolStripMenuItem miBarManage;
         private System.Windows.Forms.ToolStripMenuItem miEventAdd;
         private System.Windows.Forms.ToolStripMenuItem miEventsManage;
-        private System.Windows.Forms.ToolStripMenuItem loadFromXmlToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem miFileLoadXml;
-        private System.Windows.Forms.ToolStripMenuItem miFileLoadPowerpoint;
         private System.Windows.Forms.OpenFileDialog openXML;
+        private System.Windows.Forms.ToolStripMenuItem miProjectUpdate;
+        private System.Windows.Forms.ToolStripMenuItem miProjectReplace;
+        private System.Windows.Forms.OpenFileDialog openPPT;
+        private System.Windows.Forms.ToolStripMenuItem miFileLoadXml;
+        private System.Windows.Forms.ToolStripMenuItem miFileOpenPPT;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem miProjectCreate;
     }
 }

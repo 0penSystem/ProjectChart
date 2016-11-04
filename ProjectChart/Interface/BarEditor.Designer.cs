@@ -73,7 +73,7 @@
             this.txtName.Location = new System.Drawing.Point(75, 12);
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(200, 20);
-            this.txtName.TabIndex = 3;
+            this.txtName.TabIndex = 0;
             this.txtName.Validating += new System.ComponentModel.CancelEventHandler(this.txtName_Validating);
             // 
             // dtStart
@@ -81,14 +81,15 @@
             this.dtStart.Location = new System.Drawing.Point(75, 38);
             this.dtStart.Name = "dtStart";
             this.dtStart.Size = new System.Drawing.Size(200, 20);
-            this.dtStart.TabIndex = 4;
+            this.dtStart.TabIndex = 1;
+            this.dtStart.Validating += new System.ComponentModel.CancelEventHandler(this.dtStart_Validating);
             // 
             // dtEnd
             // 
             this.dtEnd.Location = new System.Drawing.Point(75, 64);
             this.dtEnd.Name = "dtEnd";
             this.dtEnd.Size = new System.Drawing.Size(200, 20);
-            this.dtEnd.TabIndex = 5;
+            this.dtEnd.TabIndex = 2;
             this.dtEnd.Value = new System.DateTime(2016, 11, 4, 14, 17, 32, 0);
             this.dtEnd.Validating += new System.ComponentModel.CancelEventHandler(this.dtEnd_Validating);
             // 
@@ -98,7 +99,7 @@
             this.btnSave.Location = new System.Drawing.Point(129, 96);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
-            this.btnSave.TabIndex = 6;
+            this.btnSave.TabIndex = 3;
             this.btnSave.Text = "Save";
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
@@ -110,7 +111,7 @@
             this.btnCancel.Location = new System.Drawing.Point(211, 96);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
-            this.btnCancel.TabIndex = 7;
+            this.btnCancel.TabIndex = 4;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
@@ -125,7 +126,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
-            this.ClientSize = new System.Drawing.Size(298, 131);
+            this.ClientSize = new System.Drawing.Size(298, 154);
             this.ControlBox = false;
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnSave);

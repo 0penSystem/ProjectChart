@@ -42,9 +42,9 @@ namespace ProjectChart.Interface
 
                 if (selectedEvent.ParentID >= 0)
                 {
-                    foreach(Bar b in cbParent.Items)
+                    foreach (Bar b in cbParent.Items)
                     {
-                        if(b.Id == selectedEvent.ParentID)
+                        if (b.Id == selectedEvent.ParentID)
                         {
                             cbParent.SelectedItem = b;
                             break;
@@ -122,21 +122,23 @@ namespace ProjectChart.Interface
                     Shape = (Event.EventShape)cbShape.SelectedIndex,
                     Date = dtDate.Value,
                     ParentID = (int)cbParent.SelectedValue
-            };
+                };
 
-            if (newEvent.Id != -1)
-            {
-                //edit
-                Database.updateEvent(newEvent);
-                Close();
-            }
-            else
-            {
-                //add
-                Database.addEvent(newEvent);
+                if (newEvent.Id == -1)
+                {
+
+                    //add
+                    Database.addEvent(newEvent);
+
+                }
+                else
+                {
+                    //edit
+                    Database.updateEvent(newEvent);
+
+                }
                 Close();
             }
         }
     }
-}
 }

@@ -11,6 +11,7 @@ namespace ProjectChart.DataObjects
         public int Id { get; private set; }
         public string Text { get; set; }
         public DateTime Date { get; set; }
+        public Bar Parent { get; set; }
         public int ParentID { get; set; }
         public EventShape Shape { get; set; } = EventShape.Arrow;
         public EventLocation Location { get; set; } = EventLocation.Above;

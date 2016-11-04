@@ -53,7 +53,7 @@
             this.btnSave.Location = new System.Drawing.Point(124, 157);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
-            this.btnSave.TabIndex = 0;
+            this.btnSave.TabIndex = 5;
             this.btnSave.Text = "Save";
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
@@ -65,7 +65,7 @@
             this.btnCancel.Location = new System.Drawing.Point(205, 157);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
-            this.btnCancel.TabIndex = 1;
+            this.btnCancel.TabIndex = 6;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
@@ -76,7 +76,7 @@
             this.label1.Location = new System.Drawing.Point(41, 16);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(28, 13);
-            this.label1.TabIndex = 2;
+            this.label1.TabIndex = 7;
             this.label1.Text = "Text";
             // 
             // label2
@@ -85,7 +85,7 @@
             this.label2.Location = new System.Drawing.Point(12, 68);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(57, 13);
-            this.label2.TabIndex = 3;
+            this.label2.TabIndex = 9;
             this.label2.Text = "Parent Bar";
             // 
             // label3
@@ -94,7 +94,7 @@
             this.label3.Location = new System.Drawing.Point(31, 95);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(38, 13);
-            this.label3.TabIndex = 4;
+            this.label3.TabIndex = 10;
             this.label3.Text = "Shape";
             // 
             // label4
@@ -103,20 +103,22 @@
             this.label4.Location = new System.Drawing.Point(21, 122);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(48, 13);
-            this.label4.TabIndex = 5;
+            this.label4.TabIndex = 11;
             this.label4.Text = "Location";
             // 
             // cbParent
             // 
             this.cbParent.DataSource = this.barsBinding;
+            this.cbParent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbParent.FormattingEnabled = true;
             this.cbParent.Location = new System.Drawing.Point(75, 65);
             this.cbParent.Name = "cbParent";
             this.cbParent.Size = new System.Drawing.Size(200, 21);
-            this.cbParent.TabIndex = 6;
+            this.cbParent.TabIndex = 2;
             // 
             // cbShape
             // 
+            this.cbShape.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbShape.FormattingEnabled = true;
             this.cbShape.Items.AddRange(new object[] {
             "Arrow",
@@ -126,10 +128,11 @@
             this.cbShape.Location = new System.Drawing.Point(75, 92);
             this.cbShape.Name = "cbShape";
             this.cbShape.Size = new System.Drawing.Size(200, 21);
-            this.cbShape.TabIndex = 7;
+            this.cbShape.TabIndex = 3;
             // 
             // cbLocation
             // 
+            this.cbLocation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbLocation.FormattingEnabled = true;
             this.cbLocation.Items.AddRange(new object[] {
             "Above",
@@ -137,14 +140,14 @@
             this.cbLocation.Location = new System.Drawing.Point(75, 119);
             this.cbLocation.Name = "cbLocation";
             this.cbLocation.Size = new System.Drawing.Size(200, 21);
-            this.cbLocation.TabIndex = 8;
+            this.cbLocation.TabIndex = 4;
             // 
             // txtText
             // 
             this.txtText.Location = new System.Drawing.Point(75, 13);
             this.txtText.Name = "txtText";
             this.txtText.Size = new System.Drawing.Size(200, 20);
-            this.txtText.TabIndex = 9;
+            this.txtText.TabIndex = 0;
             this.txtText.Validating += new System.ComponentModel.CancelEventHandler(this.txtText_Validating);
             // 
             // label5
@@ -153,7 +156,7 @@
             this.label5.Location = new System.Drawing.Point(39, 45);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(30, 13);
-            this.label5.TabIndex = 10;
+            this.label5.TabIndex = 8;
             this.label5.Text = "Date";
             // 
             // dtDate
@@ -161,11 +164,12 @@
             this.dtDate.Location = new System.Drawing.Point(75, 39);
             this.dtDate.Name = "dtDate";
             this.dtDate.Size = new System.Drawing.Size(200, 20);
-            this.dtDate.TabIndex = 11;
+            this.dtDate.TabIndex = 1;
             this.dtDate.Validated += new System.EventHandler(this.dtDate_Validated);
             // 
             // errorProvider
             // 
+            this.errorProvider.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.NeverBlink;
             this.errorProvider.ContainerControl = this;
             // 
             // EventEditor

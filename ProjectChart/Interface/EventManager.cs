@@ -24,7 +24,7 @@ namespace ProjectChart.Interface
         {
             base.OnLoad(e);
 
-
+            
 
             RefreshGrid();
         }
@@ -33,7 +33,6 @@ namespace ProjectChart.Interface
         {
             eventBinding.DataSource = null;
             eventBinding.DataSource = Database.getEvents();
-
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -41,21 +40,21 @@ namespace ProjectChart.Interface
             if (e.ColumnIndex == dataGridView1.Columns["colEdit"].Index)
             {
                 //clicked the edit column.
-                var newEvent = dataGridView1.Rows[e.RowIndex].DataBoundItem as Event;
+                var clickedEvent = dataGridView1.Rows[e.RowIndex].DataBoundItem as Event;
 
-                var dlg = new EventEditor() { Database = Database, selectedEvent = newEvent };
+                var dlg = new EventEditor() { Database = Database, selectedEvent = clickedEvent };
                 dlg.ShowDialog();
                 RefreshGrid();
             }
             else if (e.ColumnIndex == dataGridView1.Columns["colDelete"].Index)
             {
                 //clicked the delete column.
-                var newEvent = dataGridView1.Rows[e.RowIndex].DataBoundItem as Event;
+                var clickedEvent = dataGridView1.Rows[e.RowIndex].DataBoundItem as Event;
                 var result = MessageBox.Show(owner: this, text: "Are you sure you want to delete? This cannot be undone.", caption: "Delete", buttons: MessageBoxButtons.OKCancel, icon: MessageBoxIcon.Warning);
 
                 if (result == DialogResult.OK)
                 {
-                    Database.deleteEvent(newEvent);
+                    Database.deleteEvent(clickedEvent);
 
                     RefreshGrid();
                 }

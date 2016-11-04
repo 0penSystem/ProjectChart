@@ -10,7 +10,7 @@ namespace ProjectChart.DataObjects
 {
     public class Database
     {
-        private DataSet data = new DataSet();
+        public DataSet data = new DataSet();
 
         #region Public Project Properties
 
@@ -183,7 +183,24 @@ namespace ProjectChart.DataObjects
 
         public IEnumerable<Event> getEvents()
         {
+            
+
+
+
+
+            var parent = from DataRow e in data.Tables["Events"].AsEnumerable()
+                         where !e.IsNull("ParentBar")
+                         select new Event(e.Field<int>("EventId"))
+                         {
+                             Text = e.Field<string>("Event Name"),
+                             Date = e.Field<DateTime>("Event Date"),                            
+                             ParentID = e.Field<int>("ParentBar"),
+                             Parent = getBar(e.Field<int>("ParentBar")),
+                             Location = !e.IsNull("Location") ? (Event.EventLocation)e.Field<int>("Location") : Event.EventLocation.Above,
+                             Shape = !e.IsNull("Shape") ? (Event.EventShape)e.Field<int>("Shape") : Event.EventShape.Arrow
+                         };
             var noParent = from DataRow e in data.Tables["Events"].AsEnumerable()
+                           where e.IsNull("ParentBar")
                            select new Event(e.Field<int>("EventId"))
                            {
                                Text = e.Field<string>("Event Name"),
@@ -194,24 +211,9 @@ namespace ProjectChart.DataObjects
                            };
 
 
-
-
-            var parent = from DataRow EVENT in data.Tables["Events"].AsEnumerable()
-                         where !EVENT.IsNull("ParentBar") && !(EVENT.IsNull("Location") || EVENT.IsNull("Shape"))
-                         select new Event(EVENT.Field<int>("EventId"))
-                         {
-                             Text = EVENT.Field<string>("Event Name"),
-                             Date = EVENT.Field<DateTime>("Event Date"),
-                             ParentID = EVENT.Field<int>("ParentBar"),
-                             Location = !EVENT.IsNull("Location") ? (Event.EventLocation)EVENT.Field<int>("Location") : Event.EventLocation.Above,
-                             Shape = !EVENT.IsNull("Shape") ? (Event.EventShape)EVENT.Field<int>("Shape") : Event.EventShape.Arrow
-                         };
-
-
-
             List<Event> list = new List<Event>();
 
-            foreach (Event e in noParent.Except(parent))
+            foreach (Event e in noParent.Concat(parent))
             {
                 list.Add(e);
             }

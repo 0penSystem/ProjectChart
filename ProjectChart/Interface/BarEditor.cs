@@ -99,6 +99,11 @@ namespace ProjectChart.Interface
                 errorProvider.SetError(end, "End date must come after Start date.");
                 e.Cancel = true;
             }
+            if(end.Value < Database.StartDate || end.Value > Database.EndDate)
+            {
+                errorProvider.SetError(end, "End date must be within project scope.");
+                e.Cancel = true;
+            }
             else
             {
                 errorProvider.SetError(end, "");
@@ -106,6 +111,26 @@ namespace ProjectChart.Interface
             }
 
 
+        }
+
+        private void dtStart_Validating(object sender, CancelEventArgs e)
+        {
+            var start = sender as DateTimePicker;
+            if (start.Value < dtStart.Value)
+            {
+                errorProvider.SetError(start, "End date must come after Start date.");
+                e.Cancel = true;
+            }
+            if (start.Value < Database.EndDate || start.Value > Database.StartDate)
+            {
+                errorProvider.SetError(start, "End date must be within project scope.");
+                e.Cancel = true;
+            }
+            else
+            {
+                errorProvider.SetError(start, "");
+                e.Cancel = false;
+            }
         }
     }
 }

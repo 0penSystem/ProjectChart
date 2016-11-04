@@ -1,4 +1,5 @@
-﻿using ProjectChart.DataObjects;
+﻿using Microsoft.Office.Interop.PowerPoint;
+using ProjectChart.DataObjects;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace ProjectChart.Interface
 {
@@ -18,9 +20,18 @@ namespace ProjectChart.Interface
             get; set;
         } = new Database();
 
+        internal Microsoft.Office.Interop.PowerPoint.Application Powerpoint;
+        internal Presentation ppt;
+
+
         public MainForm()
         {
             InitializeComponent();
+
+
+            Powerpoint = Powerpoint ?? new Microsoft.Office.Interop.PowerPoint.Application();
+            Powerpoint.PresentationBeforeSave += Powerpoint_PresentationBeforeSave;
+
             txtName.Text = "";
             dtStart.Value = DateTime.Now;
             dtEnd.Value = DateTime.Now + TimeSpan.FromDays(1);
@@ -80,7 +91,62 @@ namespace ProjectChart.Interface
                 txtName.Text = _database.Name;
                 dtStart.Value = _database.StartDate;
                 dtEnd.Value = _database.EndDate;
-                
+
+
+            }
+        }
+
+        private void miProjectCreate_Click(object sender, EventArgs e)
+        {
+            Powerpoint = Powerpoint ?? new Microsoft.Office.Interop.PowerPoint.Application();
+            ppt = Powerpoint.Presentations.Add(Microsoft.Office.Core.MsoTriState.msoTrue);
+
+
+            CreateModule.CreateChart(ppt, _database.data);
+        }
+
+        private void miProjectUpdate_Click(object sender, EventArgs e)
+        {
+            UpdateModule.UpdateChart(ppt, _database.data);
+        }
+
+        private void miProjectReplace_Click(object sender, EventArgs e)
+        {
+            if (Powerpoint.Windows.Count == 0)
+            {
+                return;
+            }
+            UpdateModule.ReplaceMissing(ppt, _database.data);
+        }
+
+        private void Powerpoint_PresentationBeforeSave(Presentation Pres, ref bool Cancel)
+        {
+            if (Pres == ppt)
+            {
+                Pres.Tags.Delete("ProjectData");
+                Pres.Tags.Add("ProjectData", _database.data.GetXml());
+            }
+        }
+
+        private void miFileOpenPPT_Click(object sender, EventArgs e)
+        {
+            if (openPPT.ShowDialog() == DialogResult.OK)
+            {
+
+                Powerpoint = Powerpoint ?? new Microsoft.Office.Interop.PowerPoint.Application();
+                ppt = Powerpoint.Presentations.Open(openPPT.FileName);
+
+
+
+                var xml = ppt.Tags["ProjectData"];
+                var data = new XmlDocument();
+                data.LoadXml(xml);
+                XmlReader n = new XmlNodeReader(data);
+                _database = new Database(n);
+
+                txtName.Text = _database.Name;
+                dtStart.Value = _database.StartDate;
+                dtEnd.Value = _database.EndDate;
 
             }
         }
