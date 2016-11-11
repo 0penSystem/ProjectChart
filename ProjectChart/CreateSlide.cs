@@ -2,6 +2,8 @@
 using System;
 using Microsoft.Office.Core;
 using System.Data;
+using System.Collections.Generic;
+using ProjectChart.DataObjects;
 
 namespace ProjectChart
 {
@@ -10,7 +12,6 @@ namespace ProjectChart
 
     public class CreateModule
     {
-
         static double daysInAQuarter = 91.25;
         static double TIME_TO_WIDTH;
         static DateTime P_START;
@@ -21,6 +22,7 @@ namespace ProjectChart
             CreateTimescale(ppt, data);
             CreateBars(ppt, data);
             CreateEvents(ppt, data);
+
         }
 
         private static void CreateNewSlide(Presentation ppt)
@@ -28,7 +30,7 @@ namespace ProjectChart
             ppt.Slides.Add(1, PpSlideLayout.ppLayoutBlank);
         }
 
-        private static void CreateTimescale(Presentation ppt, DataSet data)
+        public static void CreateTimescale(Presentation ppt, DataSet data)
         {
             var width = ppt.SlideMaster.Width;
             DateTime start, end;
@@ -37,21 +39,124 @@ namespace ProjectChart
             end = data.Tables["Project"].Rows[0].Field<DateTime>("End Date");
             P_START = start;
 
+            int startQ = 0, endQ = 0;
+            TimeSpan fromQuarterStart = new TimeSpan(), fromQuarterEnd = new TimeSpan();
+
+
+            //Console.Write((int)Math.Ceiling(start.Month / 3.0));
+
+            switch ((int)Math.Ceiling(start.Month / 3.0))
+            {
+
+                case 1:
+                    {
+                        //jan,feb,mar - Q2
+                        startQ = 2;
+                        fromQuarterStart = start - DateTime.Parse($"January 1, {start.Year}");
+                        break;
+                    }
+                case 2:
+                    {
+                        //apr,may,jun - Q3
+                        startQ = 3;
+                        fromQuarterStart = start - DateTime.Parse($"April 1, {start.Year}");
+                        break;
+                    }
+                case 3:
+                    {
+                        //jul,aug,sep - Q4
+                        startQ = 4;
+                        fromQuarterStart = start - DateTime.Parse($"July 1, {start.Year}");
+                        break;
+                    }
+                case 4:
+                    {
+                        //oct,nov,dec - Q1
+                        startQ = 1;
+                        fromQuarterStart = start - DateTime.Parse($"October 1, {start.Year}");
+                        break;
+                    }
+            }
+
+            switch ((int)Math.Ceiling(end.Month / 3.0))
+            {
+
+                case 1:
+                    {
+                        //jan,feb,mar - Q2
+                        endQ = 2;
+                        fromQuarterEnd = DateTime.Parse($"Mar 31, {end.Year}") - end;
+                        break;
+                    }
+                case 2:
+                    {
+                        //apr,may,jun - Q3
+                        endQ = 3;
+                        fromQuarterEnd = DateTime.Parse($"June 30, {end.Year}") - end;
+                        break;
+                    }
+                case 3:
+                    {
+                        //jul,aug,sep - Q4
+                        endQ = 4;
+                        fromQuarterEnd = DateTime.Parse($"September 30, {end.Year}") - end;
+                        break;
+                    }
+                case 4:
+                    {
+                        //oct,nov,dec - Q1
+                        endQ = 1;
+                        fromQuarterEnd = DateTime.Parse($"December 31, {end.Year}") - end;
+                        break;
+                    }
+            }
+
+
+
             TimeSpan span = end - start;
 
             TIME_TO_WIDTH = (width / span.TotalSeconds);
 
             int quarters = (int)(span.Days / daysInAQuarter);
+            quarters -= 1; // for the first and last
+
+            //first box, special
+            var firstWidth = (TimeSpan.FromDays(91.25) - fromQuarterStart).TotalSeconds * TIME_TO_WIDTH;
+
+            var first = ppt.Slides[1].Shapes.AddShape(MsoAutoShapeType.msoShapeRectangle, 0, 20, (float)firstWidth, 20);
+            first.Tags.Add("Timescale", "true");
 
 
-            var boxWidth = width / quarters;
+            //last box, also special
+            var lastWidth = (TimeSpan.FromDays(91.25) - fromQuarterEnd).TotalSeconds * TIME_TO_WIDTH;
+
+            var last = ppt.Slides[1].Shapes.AddShape(MsoAutoShapeType.msoShapeRectangle, (float)(width - lastWidth), 20, (float)lastWidth, 20);
+            last.Tags.Add("Timescale", "true");
+
+
+
+            var boxWidth = TimeSpan.FromDays(91.25).TotalSeconds * TIME_TO_WIDTH;
 
             for (int i = 0; i < quarters; i++)
             {
-                var ts = ppt.Slides[1].Shapes.AddShape(MsoAutoShapeType.msoShapeRectangle, (float)(i * boxWidth), 20, (float)boxWidth, 20);
+                //timescale box
+                var ts = ppt.Slides[1].Shapes.AddShape(MsoAutoShapeType.msoShapeRectangle, (float)((i * boxWidth) + firstWidth), 20, (float)boxWidth, 20);
                 ts.Tags.Add("Timescale", "true");
+
+                //lines
+                var line = ppt.Slides[1].Shapes.AddLine((float)((i * boxWidth) + firstWidth), 0, (float)((i * boxWidth) + firstWidth), ppt.SlideMaster.Height);
+                line.Tags.Add("Timescale", "true");
+                line.Line.ForeColor.RGB = System.Drawing.Color.Gray.ToArgb();
+                line.Line.DashStyle = MsoLineDashStyle.msoLineDash;
+                line.ZOrder(MsoZOrderCmd.msoSendToBack);
             }
 
+            var lastLine = ppt.Slides[1].Shapes.AddLine((float)((quarters * boxWidth) + firstWidth), 0, (float)((quarters * boxWidth) + firstWidth), ppt.SlideMaster.Height);
+
+            lastLine.Tags.Add("Timescale", "true");
+            lastLine.Line.ForeColor.RGB = System.Drawing.Color.Gray.ToArgb();
+            lastLine.Line.DashStyle = MsoLineDashStyle.msoLineDash;
+            lastLine.ZOrder(MsoZOrderCmd.msoSendToBack);
 
         }
 
@@ -76,7 +181,14 @@ namespace ProjectChart
                 b.Tags.Add("ID", "" + bar.ID);
 
                 b.TextFrame.TextRange.Text = bar.Name;
+
+                if (false) //TODO: implement shapetype for bars
+                { b.AutoShapeType = MsoAutoShapeType.msoShapeRoundedRectangle; }
+
+
                 i++;
+
+
 
                 bar.Data.BeginEdit();
                 bar.Data.SetField("InChart", true);
@@ -90,7 +202,7 @@ namespace ProjectChart
         private static void CreateEvents(Presentation ppt, DataSet data)
         {
 
-            var query = from DataRow d in data.Tables["Events"].AsEnumerable() select new { Date = d.Field<DateTime>("Event Date"), ID = d.Field<int>("EventID"), Name = d.Field<string>("Event Name"), Data = d };
+            var query = from DataRow d in data.Tables["Events"].AsEnumerable() select new { Date = d.Field<DateTime>("Event Date"), ID = d.Field<int>("EventID"), Name = d.Field<string>("Event Name"), Data = d, Shape = d.Field<int>("Shape"), Location = d.Field<int>("Location") };
 
             foreach (var @event in query)
             {
@@ -98,20 +210,74 @@ namespace ProjectChart
                 double eventWidth = 20;
                 double eventTop = 0;
                 double eventHeight = 20;
+                MsoAutoShapeType shape;
+                float rotation = 0;
+
+
+
+                switch (@event.Shape)
+                {
+                    case 0:
+                        {
+                            shape = MsoAutoShapeType.msoShapeDownArrow;
+                            if (@event.Location == (int)Event.EventLocation.Below)
+                            {
+                                rotation += 180;
+                            }
+                            break;
+                        }
+                    case 1:
+                        {
+                            shape = MsoAutoShapeType.msoShapeIsoscelesTriangle;
+                            rotation += 180;
+                            if (@event.Location == (int)Event.EventLocation.Below)
+                            {
+                                rotation += 180;
+                            }
+                            break;
+                        }
+                    case 2:
+                        {
+                            shape = MsoAutoShapeType.msoShapeDiamond;
+                            break;
+                        }
+                    case 3:
+                        {
+                            shape = MsoAutoShapeType.msoShape5pointStar;
+                            break;
+                        }
+                    default:
+                        {
+                            shape = MsoAutoShapeType.msoShapeDownArrow;
+                            if (@event.Location == (int)Event.EventLocation.Below)
+                            {
+                                rotation += 180;
+                            }
+                            break;
+                        }
+                }
 
 
                 if (!DBNull.Value.Equals(@event.Data["ParentBar"]))
                 {
                     //has a parent bar?
                     eventTop = ppt.Slides[1].Shapes["Bar_" + @event.Data.Field<int>("ParentBar")].Top - eventHeight;
+                    if (@event.Location == (int)Event.EventLocation.Below)
+                    {
+                        eventTop = ppt.Slides[1].Shapes["Bar_" + @event.Data.Field<int>("ParentBar")].Top + ppt.Slides[1].Shapes["Bar_" + @event.Data.Field<int>("ParentBar")].Height;
+                    }
                 }
 
 
-                var e = ppt.Slides[1].Shapes.AddShape(MsoAutoShapeType.msoShapeDownArrow, (float)(eventOffset - (eventWidth / 2)), (float)eventTop, (float)eventWidth, 20);
+
+
+                var e = ppt.Slides[1].Shapes.AddShape(shape, (float)(eventOffset - (eventWidth / 2)), (float)eventTop, (float)eventWidth, 20);
                 e.Name = "Event_" + @event.ID;
 
                 e.Tags.Add("Event", "true");
                 e.Tags.Add("ID", "" + @event.ID);
+
+                e.Rotation = rotation;
 
                 var t = ppt.Slides[1].Shapes.AddTextbox(MsoTextOrientation.msoTextOrientationHorizontal, (float)(eventOffset + (eventWidth / 2)), (float)eventTop, 100, 20);
 
