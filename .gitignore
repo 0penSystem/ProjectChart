@@ -254,3 +254,4 @@ ProjectChart/obj/Release/*
 ProjectChart/obj/Debug/*
 *.suo
 ProjectChart/obj/Debug/TempPE/ProjectData.Designer.cs.dll
+.vs/ProjectChart/v14/.suo
