@@ -4,6 +4,7 @@ using Microsoft.Office.Core;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
+using ProjectChart.DataObjects;
 
 namespace ProjectChart
 {
@@ -28,40 +29,97 @@ namespace ProjectChart
 
         private static void ReplaceEvents(Presentation ppt, DataSet data)
         {
-            var query = from DataRow d in data.Tables["Events"].AsEnumerable() where !d.Field<bool>("InChart") select new { Date = d.Field<DateTime>("Event Date"), ID = d.Field<int>("EventID"), Name = d.Field<string>("Event Name"), Data = d };
+            var query = from DataRow d in data.Tables["Events"].AsEnumerable() where !d.Field<bool>("InChart") select new { Date = d.Field<DateTime>("Event Date"), ID = d.Field<int>("EventID"), Name = d.Field<string>("Event Name"), Data = d, Shape = d.Field<int>("Shape"), Location = d.Field<int>("Location") };
 
             foreach (var @event in query)
             {
-                double eventOffset = (@event.Date - P_START).TotalSeconds * TIME_TO_WIDTH;
-                double eventWidth = 20;
-                double eventTop = 0;
-                double eventHeight = 20;
 
-
-                if (!DBNull.Value.Equals(@event.Data["ParentBar"]))
                 {
-                    //has a parent bar?
-                    eventTop = ppt.Slides[1].Shapes["Bar_" + @event.Data.Field<int>("ParentBar")].Top - eventHeight;
+                    double eventOffset = (@event.Date - P_START).TotalSeconds * TIME_TO_WIDTH;
+                    double eventWidth = 20;
+                    double eventTop = 0;
+                    double eventHeight = 20;
+                    MsoAutoShapeType shape;
+                    float rotation = 0;
+
+
+
+                    switch (@event.Shape)
+                    {
+                        case 0:
+                            {
+                                shape = MsoAutoShapeType.msoShapeDownArrow;
+                                if (@event.Location == (int)Event.EventLocation.Below)
+                                {
+                                    rotation += 180;
+                                }
+                                break;
+                            }
+                        case 1:
+                            {
+                                shape = MsoAutoShapeType.msoShapeIsoscelesTriangle;
+                                rotation += 180;
+                                if (@event.Location == (int)Event.EventLocation.Below)
+                                {
+                                    rotation += 180;
+                                }
+                                break;
+                            }
+                        case 2:
+                            {
+                                shape = MsoAutoShapeType.msoShapeDiamond;
+                                break;
+                            }
+                        case 3:
+                            {
+                                shape = MsoAutoShapeType.msoShape5pointStar;
+                                break;
+                            }
+                        default:
+                            {
+                                shape = MsoAutoShapeType.msoShapeDownArrow;
+                                if (@event.Location == (int)Event.EventLocation.Below)
+                                {
+                                    rotation += 180;
+                                }
+                                break;
+                            }
+                    }
+
+
+                    if (!DBNull.Value.Equals(@event.Data["ParentBar"]))
+                    {
+                        //has a parent bar?
+                        eventTop = ppt.Slides[1].Shapes["Bar_" + @event.Data.Field<int>("ParentBar")].Top - eventHeight;
+                        if (@event.Location == (int)Event.EventLocation.Below)
+                        {
+                            eventTop = ppt.Slides[1].Shapes["Bar_" + @event.Data.Field<int>("ParentBar")].Top + ppt.Slides[1].Shapes["Bar_" + @event.Data.Field<int>("ParentBar")].Height;
+                        }
+                    }
+
+
+
+
+                    var e = ppt.Slides[1].Shapes.AddShape(shape, (float)(eventOffset - (eventWidth / 2)), (float)eventTop, (float)eventWidth, 20);
+                    e.Name = "Event_" + @event.ID;
+
+                    e.Tags.Add("Event", "true");
+                    e.Tags.Add("ID", "" + @event.ID);
+
+                    e.Rotation = rotation;
+
+                    var t = ppt.Slides[1].Shapes.AddTextbox(MsoTextOrientation.msoTextOrientationHorizontal, (float)(eventOffset + (eventWidth / 2)), (float)eventTop, 100, 20);
+
+
+                    t.Tags.Add("EventText", "true");
+                    t.Tags.Add("ID", "" + @event.ID);
+                    t.TextFrame.TextRange.Text = @event.Name;
+
+
+                    @event.Data.BeginEdit();
+                    @event.Data.SetField("InChart", true);
+                    @event.Data.EndEdit();
                 }
-
-
-                var e = ppt.Slides[1].Shapes.AddShape(MsoAutoShapeType.msoShapeDownArrow, (float)(eventOffset - (eventWidth / 2)), (float)eventTop, (float)eventWidth, 20);
-                e.Name = "Event_" + @event.ID;
-
-                e.Tags.Add("Event", "true");
-                e.Tags.Add("ID", "" + @event.ID);
-
-                var t = ppt.Slides[1].Shapes.AddTextbox(MsoTextOrientation.msoTextOrientationHorizontal, (float)(eventOffset + (eventWidth / 2)), (float)eventTop, 100, 20);
-
-
-                t.Tags.Add("EventText", "true");
-                t.Tags.Add("ID", "" + @event.ID);
-                t.TextFrame.TextRange.Text = @event.Name;
-
-
-                @event.Data.BeginEdit();
-                @event.Data.SetField("InChart", true);
-                @event.Data.EndEdit();
             }
 
         }
@@ -86,6 +144,9 @@ namespace ProjectChart
                 b.Tags.Add("ID", "" + bar.ID);
 
                 b.TextFrame.TextRange.Text = bar.Name;
+
+                if (false) //TODO: implement shapetype for bars
+                { b.AutoShapeType = MsoAutoShapeType.msoShapeRoundedRectangle; }
 
                 bar.Data.BeginEdit();
                 bar.Data.SetField("InChart", true);
@@ -123,16 +184,8 @@ namespace ProjectChart
 
             TIME_TO_WIDTH = (width / span.TotalSeconds);
 
-            int quarters = (int)(span.Days / daysInAQuarter);
+            CreateModule.CreateTimescale(ppt, data);
 
-
-            var boxWidth = width / quarters;
-
-            for (int i = 0; i < quarters; i++)
-            {
-                var ts = ppt.Slides[1].Shapes.AddShape(MsoAutoShapeType.msoShapeRectangle, (float)(i * boxWidth), 20, (float)boxWidth, 20);
-                ts.Tags.Add("Timescale", "true");
-            }
         }
 
         private static void UpdateBars(Presentation ppt, DataSet data)
@@ -195,13 +248,67 @@ namespace ProjectChart
                         where s2.Tags?["EventText"] == "true"
                         join d in data.Tables["Events"].AsEnumerable() on int.Parse(s.Tags["ID"]) equals d.Field<int>("EventID")
 
-                        select new { Date = d.Field<DateTime>("Event Date"), Name = d.Field<string>("Event Name"), Shape = s, Text = s2, Data = d, ID = d.Field<int>("EventID") };
+                        select new { Date = d.Field<DateTime>("Event Date"), Name = d.Field<string>("Event Name"), Shape = s, Text = s2, Data = d, ID = d.Field<int>("EventID"), ShapeType = d.Field<int>("Shape"), Location = d.Field<int>("Location") };
 
 
             foreach (var x in query)
             {
                 double eventOffset = (x.Date - P_START).TotalSeconds * TIME_TO_WIDTH;
                 double eventHeight = 20;
+                float textOffsetTop = x.Text.Top - x.Shape.Top;
+                float textOffsetLeft = x.Text.Left - x.Shape.Left;
+                float rotation = 0;
+                MsoAutoShapeType type;
+
+                switch (x.ShapeType)
+                {
+                    case 0:
+                        {
+                            type = MsoAutoShapeType.msoShapeDownArrow;
+                            if (x.Location == (int)Event.EventLocation.Below)
+                            {
+                                rotation += 180;
+                            }
+                            break;
+                        }
+                    case 1:
+                        {
+                            type = MsoAutoShapeType.msoShapeIsoscelesTriangle;
+                            rotation = 180;
+                            if (x.Location == (int)Event.EventLocation.Below)
+                            {
+                                rotation += 180;
+                            }
+                            break;
+                        }
+                    case 2:
+                        {
+                            type = MsoAutoShapeType.msoShapeDiamond;
+                            if (x.Location == (int)Event.EventLocation.Below)
+                            {
+                                rotation += 180;
+                            }
+                            break;
+                        }
+                    case 3:
+                        {
+                            type = MsoAutoShapeType.msoShape5pointStar;
+                            if (x.Location == (int)Event.EventLocation.Below)
+                            {
+                                rotation += 180;
+                            }
+                            break;
+                        }
+                    default:
+                        {
+                            type = MsoAutoShapeType.msoShapeDownArrow;
+                            if (x.Location == (int)Event.EventLocation.Below)
+                            {
+                                rotation += 180;
+                            }
+                            break;
+                        }
+                }
 
 
                 if (!DBNull.Value.Equals(x.Data["ParentBar"]))
@@ -219,6 +326,11 @@ namespace ProjectChart
                         if (int.Parse(S.Tags["ID"]) == x.Data.Field<int>("ParentBar"))
                         {
                             x.Shape.Top = (float)(S.Top - eventHeight);
+
+                            if (x.Location == (int)Event.EventLocation.Below)
+                            {
+                                x.Shape.Top = ppt.Slides[1].Shapes["Bar_" + x.Data.Field<int>("ParentBar")].Top + ppt.Slides[1].Shapes["Bar_" + x.Data.Field<int>("ParentBar")].Height;
+                            }
                             break;
                         }
                     }
@@ -228,9 +340,11 @@ namespace ProjectChart
 
                 x.Shape.Left = (float)eventOffset - (x.Shape.Width / 2);
 
-                x.Text.Left = x.Shape.Left + x.Shape.Width;
-                x.Text.Top = x.Shape.Top;
+                x.Text.Left = x.Shape.Left + textOffsetLeft;
+                x.Text.Top = x.Shape.Top + textOffsetTop;
                 x.Text.TextFrame.TextRange.Text = x.Name;
+                x.Shape.AutoShapeType = type;
+                x.Shape.Rotation = rotation;
 
                 x.Data.BeginEdit();
                 x.Data.SetField<bool>("InChart", true);

@@ -14,7 +14,7 @@ using System.Diagnostics;
 
 namespace ProjectChart
 {
-    public partial class Form1 : Form
+    public partial class OldMainForm : Form
     {
 
 
@@ -40,7 +40,7 @@ namespace ProjectChart
 
 
 
-        public Form1()
+        public OldMainForm()
         {
             InitializeComponent();
 
@@ -52,8 +52,11 @@ namespace ProjectChart
 
         private void Powerpoint_PresentationClose(Presentation Pres)
         {
-            UpdateSlide.Enabled = false;
-            ReplaceMissing.Enabled = false;
+            if (Pres == ppt)
+            {
+                UpdateSlide.Enabled = false;
+                ReplaceMissing.Enabled = false;
+            }
         }
 
         private void ActivateControls()
@@ -175,8 +178,11 @@ namespace ProjectChart
 
         private void Powerpoint_PresentationBeforeSave(Presentation Pres, ref bool Cancel)
         {
-            Pres.Tags.Delete("ProjectData");
-            Pres.Tags.Add("ProjectData", currentProject.data.GetXml());
+            if (Pres == ppt)
+            {
+                Pres.Tags.Delete("ProjectData");
+                Pres.Tags.Add("ProjectData", currentProject.data.GetXml());
+            }
         }
 
 
