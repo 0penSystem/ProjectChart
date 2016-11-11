@@ -172,8 +172,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <None Include="packages.config" />
-    <None Include="ProjectChart_1_TemporaryKey.pfx" />
-    <None Include="ProjectChart_TemporaryKey.pfx" />
     <None Include="ProjectData.xsc">
       <DependentUpon>ProjectData.xsd</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

@@ -33,7 +33,8 @@
             this.miFileNew = new System.Windows.Forms.ToolStripMenuItem();
             this.miFileOpenPPT = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.saveXMLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.miSaveXML = new System.Windows.Forms.ToolStripMenuItem();
+            this.miFileImportXML = new System.Windows.Forms.ToolStripMenuItem();
             this.miFileLoadXml = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -53,7 +54,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.openXML = new System.Windows.Forms.OpenFileDialog();
             this.openPPT = new System.Windows.Forms.OpenFileDialog();
-            this.miFileImportXML = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveXML = new System.Windows.Forms.SaveFileDialog();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -77,7 +78,7 @@
             this.miFileNew,
             this.miFileOpenPPT,
             this.toolStripSeparator2,
-            this.saveXMLToolStripMenuItem,
+            this.miSaveXML,
             this.miFileImportXML,
             this.miFileLoadXml,
             this.toolStripSeparator1,
@@ -107,12 +108,20 @@
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(207, 6);
             // 
-            // saveXMLToolStripMenuItem
+            // miSaveXML
             // 
-            this.saveXMLToolStripMenuItem.Name = "saveXMLToolStripMenuItem";
-            this.saveXMLToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveXMLToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
-            this.saveXMLToolStripMenuItem.Text = "&Save XML";
+            this.miSaveXML.Name = "miSaveXML";
+            this.miSaveXML.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.miSaveXML.Size = new System.Drawing.Size(210, 22);
+            this.miSaveXML.Text = "&Save XML";
+            this.miSaveXML.Click += new System.EventHandler(this.miSaveXML_Click);
+            // 
+            // miFileImportXML
+            // 
+            this.miFileImportXML.Name = "miFileImportXML";
+            this.miFileImportXML.Size = new System.Drawing.Size(210, 22);
+            this.miFileImportXML.Text = "&Import XML";
+            this.miFileImportXML.Click += new System.EventHandler(this.miFileImportXML_Click);
             // 
             // miFileLoadXml
             // 
@@ -253,12 +262,9 @@
             // 
             this.openPPT.DefaultExt = "pptx";
             // 
-            // miFileImportXML
+            // saveXML
             // 
-            this.miFileImportXML.Name = "miFileImportXML";
-            this.miFileImportXML.Size = new System.Drawing.Size(210, 22);
-            this.miFileImportXML.Text = "&Import XML";
-            this.miFileImportXML.Click += new System.EventHandler(this.miFileImportXML_Click);
+            this.saveXML.DefaultExt = "xml";
             // 
             // MainForm
             // 
@@ -288,7 +294,7 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem miFileNew;
-        private System.Windows.Forms.ToolStripMenuItem saveXMLToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem miSaveXML;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem projectToolStripMenuItem;
@@ -311,5 +317,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem miProjectCreate;
         private System.Windows.Forms.ToolStripMenuItem miFileImportXML;
+        private System.Windows.Forms.SaveFileDialog saveXML;
     }
 }

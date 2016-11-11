@@ -119,6 +119,10 @@ namespace ProjectChart.Interface
 
         private void miProjectUpdate_Click(object sender, EventArgs e)
         {
+            if (Powerpoint.Windows.Count == 0)
+            {
+                return;
+            }
             UpdateModule.UpdateChart(ppt, _database.data);
         }
 
@@ -186,6 +190,15 @@ namespace ProjectChart.Interface
         private void miFileImportXML_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Not currently implemented.");
+        }
+
+        private void miSaveXML_Click(object sender, EventArgs e)
+        {
+            var result = saveXML.ShowDialog(this);
+            if(result == DialogResult.OK)
+            {
+                _database.data.WriteXml(saveXML.FileName);
+            }
         }
     }
 }
