@@ -8,7 +8,7 @@ using System.Xml;
 
 namespace ProjectChart.DataObjects
 {
-    public class Database
+    public class Database 
     {
         public DataSet data = new DataSet();
 
@@ -273,6 +273,8 @@ namespace ProjectChart.DataObjects
 
 
         #endregion
+
+        
 
     }
 

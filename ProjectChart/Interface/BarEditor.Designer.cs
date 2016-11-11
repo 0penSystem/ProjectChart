@@ -82,7 +82,6 @@
             this.dtStart.Name = "dtStart";
             this.dtStart.Size = new System.Drawing.Size(200, 20);
             this.dtStart.TabIndex = 1;
-            this.dtStart.Validating += new System.ComponentModel.CancelEventHandler(this.dtStart_Validating);
             // 
             // dtEnd
             // 
@@ -91,7 +90,6 @@
             this.dtEnd.Size = new System.Drawing.Size(200, 20);
             this.dtEnd.TabIndex = 2;
             this.dtEnd.Value = new System.DateTime(2016, 11, 4, 14, 17, 32, 0);
-            this.dtEnd.Validating += new System.ComponentModel.CancelEventHandler(this.dtEnd_Validating);
             // 
             // btnSave
             // 

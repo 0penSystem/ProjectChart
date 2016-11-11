@@ -61,6 +61,27 @@ namespace ProjectChart.Interface
 
             }
         }
+
+        private void miAddEvent_Click(object sender, EventArgs e)
+        {
+            var dlg = new EventEditor() { Database = Database };
+
+            dlg.ShowDialog(this);
+
+            RefreshGrid();
+        }
+
+        private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if(e.ColumnIndex != dataGridView1.Columns["colDelete"].Index)
+            {
+                var clickedEvent = dataGridView1.Rows[e.RowIndex].DataBoundItem as Event;
+
+                var dlg = new EventEditor() { Database = Database, selectedEvent = clickedEvent };
+                dlg.ShowDialog();
+                RefreshGrid();
+            }
+        }
     }
 }
 

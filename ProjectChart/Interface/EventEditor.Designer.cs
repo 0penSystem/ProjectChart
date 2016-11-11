@@ -148,7 +148,6 @@
             this.txtText.Name = "txtText";
             this.txtText.Size = new System.Drawing.Size(200, 20);
             this.txtText.TabIndex = 0;
-            this.txtText.Validating += new System.ComponentModel.CancelEventHandler(this.txtText_Validating);
             // 
             // label5
             // 
@@ -165,7 +164,6 @@
             this.dtDate.Name = "dtDate";
             this.dtDate.Size = new System.Drawing.Size(200, 20);
             this.dtDate.TabIndex = 1;
-            this.dtDate.Validated += new System.EventHandler(this.dtDate_Validated);
             // 
             // errorProvider
             // 

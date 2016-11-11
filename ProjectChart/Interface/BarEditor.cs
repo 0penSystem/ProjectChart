@@ -121,9 +121,9 @@ namespace ProjectChart.Interface
                 errorProvider.SetError(start, "End date must come after Start date.");
                 e.Cancel = true;
             }
-            if (start.Value < Database.EndDate || start.Value > Database.StartDate)
+            if (start.Value > Database.EndDate || start.Value < Database.StartDate)
             {
-                errorProvider.SetError(start, "End date must be within project scope.");
+                errorProvider.SetError(start, "Start date must be within project scope.");
                 e.Cancel = true;
             }
             else

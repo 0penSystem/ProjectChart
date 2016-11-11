@@ -76,39 +76,12 @@ namespace ProjectChart.Interface
 
         private void txtText_Validating(object sender, CancelEventArgs e)
         {
-            var text = sender as TextBox;
 
-            if (string.IsNullOrEmpty(text.Text))
-            {
-                errorProvider.SetError(text, "Text must not be empty.");
-                e.Cancel = true;
-            }
-            else
-            {
-                errorProvider.SetError(text, "");
-                e.Cancel = false;
-            }
         }
 
         private void dtDate_Validated(object sender, EventArgs e)
         {
-            var bar = cbParent.SelectedItem as Bar;
 
-            if (bar.Id >= 0)
-            {
-                if (dtDate.Value < bar.Start || dtDate.Value > bar.End)
-                {
-                    errorProvider.SetError(dtDate, $"Date must be within {bar.Start} and {bar.End}.");
-                }
-                else
-                {
-                    errorProvider.SetError(dtDate, "");
-                }
-            }
-            else
-            {
-                errorProvider.SetError(dtDate, "");
-            }
         }
 
         private void btnSave_Click(object sender, EventArgs e)

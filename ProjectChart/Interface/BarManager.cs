@@ -55,15 +55,24 @@ namespace ProjectChart.Interface
                 //clicked the delete column.
                 var bar = dataGridView1.Rows[e.RowIndex].DataBoundItem as Bar;
                 var result = MessageBox.Show(owner: this, text: "Are you sure you want to delete? This cannot be undone.", caption: "Delete", buttons: MessageBoxButtons.OKCancel, icon: MessageBoxIcon.Warning);
-                
-                if(result == DialogResult.OK)
+
+                if (result == DialogResult.OK)
                 {
                     Database.deleteBar(bar);
 
                     RefreshGrid();
                 }
-                
+
             }
+        }
+
+        private void miNewBar_Click(object sender, EventArgs e)
+        {
+            var dlg = new BarEditor() { Database = Database };
+            dlg.ShowDialog(this);
+
+            RefreshGrid();
+
         }
     }
 }

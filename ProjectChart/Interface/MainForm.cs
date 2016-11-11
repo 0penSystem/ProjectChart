@@ -18,7 +18,11 @@ namespace ProjectChart.Interface
         public Database _database
         {
             get; set;
-        } = new Database();
+        } = new Database()
+        {
+            StartDate = DateTime.Today,
+            EndDate = DateTime.Today + TimeSpan.FromDays(1)
+        };
 
         internal Microsoft.Office.Interop.PowerPoint.Application Powerpoint;
         internal Presentation ppt;
@@ -61,7 +65,7 @@ namespace ProjectChart.Interface
         private void miBarManage_Click(object sender, EventArgs e)
         {
             var dlg = new BarManager() { Database = _database };
-            dlg.ShowDialog(this);
+            dlg.Show(this);
         }
 
         private void miEventAdd_Click(object sender, EventArgs e)
@@ -73,7 +77,7 @@ namespace ProjectChart.Interface
         private void miEventsManage_Click(object sender, EventArgs e)
         {
             var dlg = new EventManager() { Database = _database };
-            dlg.ShowDialog(this);
+            dlg.Show(this);
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -86,14 +90,22 @@ namespace ProjectChart.Interface
             DialogResult d = openXML.ShowDialog();
             if (d == DialogResult.OK)
             {
+                try
+                {
+                    _database = new Database(openXML.FileName);
+                    txtName.Text = _database.Name;
+                    dtStart.Value = _database.StartDate;
+                    dtEnd.Value = _database.EndDate;
+                }
 
-                _database = new Database(openXML.FileName);
-                txtName.Text = _database.Name;
-                dtStart.Value = _database.StartDate;
-                dtEnd.Value = _database.EndDate;
-
+                catch (Exception ex)
+                {
+                    MessageBox.Show(text: $"Invalid File. \nException Text: {ex.Message}", owner: this, caption: "Error", icon: MessageBoxIcon.Error, buttons: MessageBoxButtons.OK);
+                }
 
             }
+
+
         }
 
         private void miProjectCreate_Click(object sender, EventArgs e)
@@ -134,21 +146,46 @@ namespace ProjectChart.Interface
             {
 
                 Powerpoint = Powerpoint ?? new Microsoft.Office.Interop.PowerPoint.Application();
-                ppt = Powerpoint.Presentations.Open(openPPT.FileName);
+
+                try
+                {
+                    ppt = Powerpoint.Presentations.Open(openPPT.FileName);
 
 
 
-                var xml = ppt.Tags["ProjectData"];
-                var data = new XmlDocument();
-                data.LoadXml(xml);
-                XmlReader n = new XmlNodeReader(data);
-                _database = new Database(n);
+                    var xml = ppt.Tags["ProjectData"];
+                    var data = new XmlDocument();
+                    data.LoadXml(xml);
+                    XmlReader n = new XmlNodeReader(data);
+                    _database = new Database(n);
 
-                txtName.Text = _database.Name;
-                dtStart.Value = _database.StartDate;
-                dtEnd.Value = _database.EndDate;
+                    txtName.Text = _database.Name;
+                    dtStart.Value = _database.StartDate;
+                    dtEnd.Value = _database.EndDate;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(text: $"Invalid File. \nException Text:{ex.Message}" , owner: this, caption: "Error", icon: MessageBoxIcon.Error, buttons: MessageBoxButtons.OK);
+                }
 
             }
+        }
+
+        private void miEvents_Click(object sender, EventArgs e)
+        {
+            var dlg = new EventManager() { Database = _database };
+            dlg.Show(this);
+        }
+
+        private void miBars_Click(object sender, EventArgs e)
+        {
+            var dlg = new BarManager() { Database = _database };
+            dlg.Show(this);
+        }
+
+        private void miFileImportXML_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Not currently implemented.");
         }
     }
 }
