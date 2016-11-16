@@ -117,47 +117,73 @@ namespace ProjectChart
 
             TIME_TO_WIDTH = (width / span.TotalSeconds);
 
-            int quarters = (int)(span.Days / daysInAQuarter);
-            quarters -= 1; // for the first and last
+            int quarters = (int)Math.Ceiling((span.Days / daysInAQuarter));
+            quarters -= 2; // for the first and last
 
             //first box, special
             var firstWidth = (TimeSpan.FromDays(91.25) - fromQuarterStart).TotalSeconds * TIME_TO_WIDTH;
-
-            var first = ppt.Slides[1].Shapes.AddShape(MsoAutoShapeType.msoShapeRectangle, 0, 20, (float)firstWidth, 20);
-            first.Tags.Add("Timescale", "true");
 
 
             //last box, also special
             var lastWidth = (TimeSpan.FromDays(91.25) - fromQuarterEnd).TotalSeconds * TIME_TO_WIDTH;
 
-            var last = ppt.Slides[1].Shapes.AddShape(MsoAutoShapeType.msoShapeRectangle, (float)(width - lastWidth), 20, (float)lastWidth, 20);
-            last.Tags.Add("Timescale", "true");
-
-
-
-            var boxWidth = TimeSpan.FromDays(91.25).TotalSeconds * TIME_TO_WIDTH;
-
-            for (int i = 0; i < quarters; i++)
+            if (startQ == endQ && firstWidth + lastWidth >= width)
             {
-                //timescale box
-                var ts = ppt.Slides[1].Shapes.AddShape(MsoAutoShapeType.msoShapeRectangle, (float)((i * boxWidth) + firstWidth), 20, (float)boxWidth, 20);
-                ts.Tags.Add("Timescale", "true");
-
-                //lines
-                var line = ppt.Slides[1].Shapes.AddLine((float)((i * boxWidth) + firstWidth), 0, (float)((i * boxWidth) + firstWidth), ppt.SlideMaster.Height);
-                line.Tags.Add("Timescale", "true");
-                line.Line.ForeColor.RGB = System.Drawing.Color.Gray.ToArgb();
-                line.Line.DashStyle = MsoLineDashStyle.msoLineDash;
-                line.ZOrder(MsoZOrderCmd.msoSendToBack);
+                var only = ppt.Slides[1].Shapes.AddShape(MsoAutoShapeType.msoShapeRectangle, 0, 20, width, 20);
+                only.Tags.Add("Timescale", "true");
             }
+            else if (firstWidth + lastWidth >= width)
+            {
+                lastWidth = width - firstWidth;
+                
+                var first = ppt.Slides[1].Shapes.AddShape(MsoAutoShapeType.msoShapeRectangle, 0, 20, (float)firstWidth, 20);
+                first.Tags.Add("Timescale", "true");
 
-            var lastLine = ppt.Slides[1].Shapes.AddLine((float)((quarters * boxWidth) + firstWidth), 0, (float)((quarters * boxWidth) + firstWidth), ppt.SlideMaster.Height);
+                var last = ppt.Slides[1].Shapes.AddShape(MsoAutoShapeType.msoShapeRectangle, (float)(width - lastWidth), 20, (float)lastWidth, 20);
+                last.Tags.Add("Timescale", "true");
 
-            lastLine.Tags.Add("Timescale", "true");
-            lastLine.Line.ForeColor.RGB = System.Drawing.Color.Gray.ToArgb();
-            lastLine.Line.DashStyle = MsoLineDashStyle.msoLineDash;
-            lastLine.ZOrder(MsoZOrderCmd.msoSendToBack);
 
+                var lastLine = ppt.Slides[1].Shapes.AddLine((float)(firstWidth), 0, (float)(firstWidth), ppt.SlideMaster.Height);
+
+                lastLine.Tags.Add("Timescale", "true");
+                lastLine.Line.ForeColor.RGB = System.Drawing.Color.Gray.ToArgb();
+                lastLine.Line.DashStyle = MsoLineDashStyle.msoLineDash;
+                lastLine.ZOrder(MsoZOrderCmd.msoSendToBack);
+            }
+            else
+            {
+                
+                var first = ppt.Slides[1].Shapes.AddShape(MsoAutoShapeType.msoShapeRectangle, 0, 20, (float)firstWidth, 20);
+                first.Tags.Add("Timescale", "true");
+
+                var last = ppt.Slides[1].Shapes.AddShape(MsoAutoShapeType.msoShapeRectangle, (float)(width - lastWidth), 20, (float)lastWidth, 20);
+                last.Tags.Add("Timescale", "true");
+
+
+
+                var boxWidth = TimeSpan.FromDays(91.25).TotalSeconds * TIME_TO_WIDTH;
+
+                for (int i = 0; i < quarters; i++)
+                {
+                    //timescale box
+                    var ts = ppt.Slides[1].Shapes.AddShape(MsoAutoShapeType.msoShapeRectangle, (float)((i * boxWidth) + firstWidth), 20, (float)boxWidth, 20);
+                    ts.Tags.Add("Timescale", "true");
+
+                    //lines
+                    var line = ppt.Slides[1].Shapes.AddLine((float)((i * boxWidth) + firstWidth), 0, (float)((i * boxWidth) + firstWidth), ppt.SlideMaster.Height);
+                    line.Tags.Add("Timescale", "true");
+                    line.Line.ForeColor.RGB = System.Drawing.Color.Gray.ToArgb();
+                    line.Line.DashStyle = MsoLineDashStyle.msoLineDash;
+                    line.ZOrder(MsoZOrderCmd.msoSendToBack);
+                }
+
+                var lastLine = ppt.Slides[1].Shapes.AddLine((float)((quarters * boxWidth) + firstWidth), 0, (float)((quarters * boxWidth) + firstWidth), ppt.SlideMaster.Height);
+
+                lastLine.Tags.Add("Timescale", "true");
+                lastLine.Line.ForeColor.RGB = System.Drawing.Color.Gray.ToArgb();
+                lastLine.Line.DashStyle = MsoLineDashStyle.msoLineDash;
+                lastLine.ZOrder(MsoZOrderCmd.msoSendToBack);
+            }
         }
 
         private static void CreateBars(Presentation ppt, DataSet data)
@@ -202,7 +228,7 @@ namespace ProjectChart
         private static void CreateEvents(Presentation ppt, DataSet data)
         {
 
-            var query = from DataRow d in data.Tables["Events"].AsEnumerable() select new { Date = d.Field<DateTime>("Event Date"), ID = d.Field<int>("EventID"), Name = d.Field<string>("Event Name"), Data = d, Shape = d.Field<int>("Shape"), Location = d.Field<int>("Location") };
+            var query = from DataRow d in data.Tables["Events"].AsEnumerable() select new { Date = d.Field<DateTime>("Event Date"), ID = d.Field<int>("EventID"), Name = d.Field<string>("Event Name"), Data = d, Shape = d.Field<int?>("Shape"), Location = d.Field<int?>("Location") };
 
             foreach (var @event in query)
             {

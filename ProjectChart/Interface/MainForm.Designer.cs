@@ -221,13 +221,16 @@
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(200, 20);
             this.txtName.TabIndex = 0;
+            this.txtName.TextChanged += new System.EventHandler(this.txtName_TextChanged);
             // 
             // dtStart
             // 
+            this.dtStart.CustomFormat = "";
             this.dtStart.Location = new System.Drawing.Point(89, 61);
             this.dtStart.Name = "dtStart";
             this.dtStart.Size = new System.Drawing.Size(200, 20);
             this.dtStart.TabIndex = 1;
+            this.dtStart.ValueChanged += new System.EventHandler(this.dtStart_ValueChanged);
             // 
             // dtEnd
             // 
@@ -235,6 +238,7 @@
             this.dtEnd.Name = "dtEnd";
             this.dtEnd.Size = new System.Drawing.Size(200, 20);
             this.dtEnd.TabIndex = 2;
+            this.dtEnd.ValueChanged += new System.EventHandler(this.dtEnd_ValueChanged);
             // 
             // label2
             // 

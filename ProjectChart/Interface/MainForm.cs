@@ -200,5 +200,23 @@ namespace ProjectChart.Interface
                 _database.data.WriteXml(saveXML.FileName);
             }
         }
+
+        private void dtStart_ValueChanged(object sender, EventArgs e)
+        {
+            var start = sender as DateTimePicker;
+            _database.StartDate = start.Value;
+        }
+
+        private void dtEnd_ValueChanged(object sender, EventArgs e)
+        {
+            var end = sender as DateTimePicker;
+            _database.EndDate = end.Value;
+        }
+
+        private void txtName_TextChanged(object sender, EventArgs e)
+        {
+            var txt = sender as TextBox;
+            _database.Name = txt.Text;
+        }
     }
 }

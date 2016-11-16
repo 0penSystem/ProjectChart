@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectChart", "ProjectChart\ProjectChart.csproj", "{725774D0-C3B6-4719-96DE-1D9689FAD869}"
 EndProject
@@ -9,12 +9,15 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+		test|Any CPU = test|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{725774D0-C3B6-4719-96DE-1D9689FAD869}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{725774D0-C3B6-4719-96DE-1D9689FAD869}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{725774D0-C3B6-4719-96DE-1D9689FAD869}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{725774D0-C3B6-4719-96DE-1D9689FAD869}.Release|Any CPU.Build.0 = Release|Any CPU
+		{725774D0-C3B6-4719-96DE-1D9689FAD869}.test|Any CPU.ActiveCfg = test|Any CPU
+		{725774D0-C3B6-4719-96DE-1D9689FAD869}.test|Any CPU.Build.0 = test|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
