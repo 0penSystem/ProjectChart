@@ -17,14 +17,15 @@ namespace ProjectChart
         static void Main()
         {
             Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
+            Application.SetCompatibleTextRenderingDefault (false);
+
             try
             {
-                Application.Run(new MainForm());
+                Application.Run (new MainForm());
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show (e.Message);
             }
 
         }

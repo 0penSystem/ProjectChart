@@ -26,7 +26,7 @@ namespace ProjectChart
                 name = value;
                 var temp = data.Tables["Project"].Rows[0];
                 temp.BeginEdit();
-                temp.SetField("Project Name", value);
+                temp.SetField ("Project Name", value);
                 temp.EndEdit();
 
             }
@@ -43,7 +43,7 @@ namespace ProjectChart
                 start = value;
                 var temp = data.Tables["Project"].Rows[0];
                 temp.BeginEdit();
-                temp.SetField("Start Date", value);
+                temp.SetField ("Start Date", value);
                 temp.EndEdit();
             }
         }
@@ -59,7 +59,7 @@ namespace ProjectChart
                 end = value;
                 var temp = data.Tables["Project"].Rows[0];
                 temp.BeginEdit();
-                temp.SetField("End Date", value);
+                temp.SetField ("End Date", value);
                 temp.EndEdit();
             }
         }
@@ -67,22 +67,22 @@ namespace ProjectChart
         public Project()
         {
             data = new DataSet();
-            data.ReadXmlSchema(@"ProjectData.xsd");
-            data.Tables["Project"].Rows.Add(data.Tables["Project"].NewRow());
+            data.ReadXmlSchema (@"ProjectData.xsd");
+            data.Tables["Project"].Rows.Add (data.Tables["Project"].NewRow());
         }
 
-        public Project(string fileName)
+        public Project (string fileName)
         {
             data = new DataSet();
-            data.ReadXmlSchema(@"ProjectData.xsd");
-            data.ReadXml(fileName);
+            data.ReadXmlSchema (@"ProjectData.xsd");
+            data.ReadXml (fileName);
         }
 
-        public Project(XmlReader x)
+        public Project (XmlReader x)
         {
             data = new DataSet();
-            data.ReadXmlSchema(@"ProjectData.xsd");
-            data.ReadXml(x);
+            data.ReadXmlSchema (@"ProjectData.xsd");
+            data.ReadXml (x);
         }
 
 

@@ -16,7 +16,7 @@ namespace ProjectChart.DataObjects
         public EventShape Shape { get; set; } = EventShape.Arrow;
         public EventLocation Location { get; set; } = EventLocation.Above;
 
-        public Event(int id) { Id = id; }
+        public Event (int id) { Id = id; }
 
 
         public enum EventShape
