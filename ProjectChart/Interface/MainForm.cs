@@ -192,7 +192,21 @@ namespace ProjectChart.Interface
 
         private void miFileImportXML_Click (object sender, EventArgs e)
         {
-            MessageBox.Show ("Not currently implemented.");
+            DialogResult d = openXML.ShowDialog();
+
+            if (d == DialogResult.OK)
+            {
+                try
+                {
+                    _database.ImportXML (openXML.FileName);
+                }
+
+                catch (Exception ex)
+                {
+                    MessageBox.Show (text: $"Invalid File. \nException Text: {ex.Message}", owner: this, caption: "Error", icon: MessageBoxIcon.Error, buttons: MessageBoxButtons.OK);
+                }
+
+            }
         }
 
         private void miSaveXML_Click (object sender, EventArgs e)

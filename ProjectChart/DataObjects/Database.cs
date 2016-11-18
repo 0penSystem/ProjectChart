@@ -88,6 +88,53 @@ namespace ProjectChart.DataObjects
 
         #endregion
 
+        #region Import XML
+        public bool ImportXML (string fileName)
+        {
+            var tempdata = new DataSet();
+            tempdata.ReadXmlSchema (@"ProjectData.xsd");
+            tempdata.ReadXml (fileName);
+            return ImportHelper (tempdata);
+        }
+
+        public bool ImportXML (XmlReader x)
+        {
+            var tempdata = new DataSet();
+            tempdata.ReadXmlSchema (@"ProjectData.xsd");
+            tempdata.ReadXml (x);
+            return ImportHelper (tempdata);
+        }
+
+        private bool ImportHelper (DataSet Import)
+        {
+            try
+            {
+                var bars = from b in Import.Tables["Bars"].AsEnumerable() select new Bar (-1) { Name = b.Field<string> ("Bar Name"), Start = b.Field<DateTime> ("Start Date"), End = b.Field<DateTime> ("End Date") };
+
+                foreach (var bar in bars)
+                {
+                    addBar (bar);
+                }
+
+                var events = from e in Import.Tables["Events"].AsEnumerable() select new Event (-1) { Date = e.Field<DateTime> ("Event Date"), ParentID = -1, Location = (Event.EventLocation) (e.Field < int?> ("Location") ?? 0), Shape = (Event.EventShape) (e.Field < int?> ("Shape") ?? 0), Text = e.Field<string> ("Event Name") };
+
+                foreach (var e in events)
+                {
+                    addEvent (e);
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+
+        #endregion
+
+
         #region Bar Methods
         public Bar getBar (int id)
         {
