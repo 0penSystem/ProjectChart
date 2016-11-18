@@ -21,7 +21,7 @@ namespace ProjectChart.Interface
         } = new Database()
         {
             StartDate = DateTime.Today,
-            EndDate = DateTime.Today + TimeSpan.FromDays(1)
+            EndDate = DateTime.Today + TimeSpan.FromDays (1)
         };
 
         internal Microsoft.Office.Interop.PowerPoint.Application Powerpoint;
@@ -38,61 +38,62 @@ namespace ProjectChart.Interface
 
             txtName.Text = "";
             dtStart.Value = DateTime.Now;
-            dtEnd.Value = DateTime.Now + TimeSpan.FromDays(1);
+            dtEnd.Value = DateTime.Now + TimeSpan.FromDays (1);
         }
 
-        private void miHelpAbout_Click(object sender, EventArgs e)
+        private void miHelpAbout_Click (object sender, EventArgs e)
         {
             var abt = new AboutBox();
-            abt.ShowDialog(this);
+            abt.ShowDialog (this);
         }
 
-        private void miBarAdd_Click(object sender, EventArgs e)
+        private void miBarAdd_Click (object sender, EventArgs e)
         {
             var dlg = new BarEditor() { Database = _database };
-            dlg.ShowDialog(this);
+            dlg.ShowDialog (this);
         }
 
-        private void miFileNew_Click(object sender, EventArgs e)
+        private void miFileNew_Click (object sender, EventArgs e)
         {
             _database = new Database();
             txtName.Text = "";
             dtStart.Value = DateTime.Now;
-            dtEnd.Value = DateTime.Now + TimeSpan.FromDays(1);
+            dtEnd.Value = DateTime.Now + TimeSpan.FromDays (1);
 
         }
 
-        private void miBarManage_Click(object sender, EventArgs e)
+        private void miBarManage_Click (object sender, EventArgs e)
         {
             var dlg = new BarManager() { Database = _database };
-            dlg.Show(this);
+            dlg.Show (this);
         }
 
-        private void miEventAdd_Click(object sender, EventArgs e)
+        private void miEventAdd_Click (object sender, EventArgs e)
         {
             var dlg = new EventEditor() { Database = _database };
-            dlg.ShowDialog(this);
+            dlg.ShowDialog (this);
         }
 
-        private void miEventsManage_Click(object sender, EventArgs e)
+        private void miEventsManage_Click (object sender, EventArgs e)
         {
             var dlg = new EventManager() { Database = _database };
-            dlg.Show(this);
+            dlg.Show (this);
         }
 
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        private void exitToolStripMenuItem_Click (object sender, EventArgs e)
         {
             Close();
         }
 
-        private void miFileLoadXml_Click(object sender, EventArgs e)
+        private void miFileLoadXml_Click (object sender, EventArgs e)
         {
             DialogResult d = openXML.ShowDialog();
+
             if (d == DialogResult.OK)
             {
                 try
                 {
-                    _database = new Database(openXML.FileName);
+                    _database = new Database (openXML.FileName);
                     txtName.Text = _database.Name;
                     dtStart.Value = _database.StartDate;
                     dtEnd.Value = _database.EndDate;
@@ -100,7 +101,7 @@ namespace ProjectChart.Interface
 
                 catch (Exception ex)
                 {
-                    MessageBox.Show(text: $"Invalid File. \nException Text: {ex.Message}", owner: this, caption: "Error", icon: MessageBoxIcon.Error, buttons: MessageBoxButtons.OK);
+                    MessageBox.Show (text: $"Invalid File. \nException Text: {ex.Message}", owner: this, caption: "Error", icon: MessageBoxIcon.Error, buttons: MessageBoxButtons.OK);
                 }
 
             }
@@ -108,43 +109,45 @@ namespace ProjectChart.Interface
 
         }
 
-        private void miProjectCreate_Click(object sender, EventArgs e)
+        private void miProjectCreate_Click (object sender, EventArgs e)
         {
             Powerpoint = Powerpoint ?? new Microsoft.Office.Interop.PowerPoint.Application();
-            ppt = Powerpoint.Presentations.Add(Microsoft.Office.Core.MsoTriState.msoTrue);
+            ppt = Powerpoint.Presentations.Add (Microsoft.Office.Core.MsoTriState.msoTrue);
 
 
-            CreateModule.CreateChart(ppt, _database.data);
+            CreateModule.CreateChart (ppt, _database.data);
         }
 
-        private void miProjectUpdate_Click(object sender, EventArgs e)
+        private void miProjectUpdate_Click (object sender, EventArgs e)
         {
             if (Powerpoint.Windows.Count == 0)
             {
                 return;
             }
-            UpdateModule.UpdateChart(ppt, _database.data);
+
+            UpdateModule.UpdateChart (ppt, _database.data);
         }
 
-        private void miProjectReplace_Click(object sender, EventArgs e)
+        private void miProjectReplace_Click (object sender, EventArgs e)
         {
             if (Powerpoint.Windows.Count == 0)
             {
                 return;
             }
-            UpdateModule.ReplaceMissing(ppt, _database.data);
+
+            UpdateModule.ReplaceMissing (ppt, _database.data);
         }
 
-        private void Powerpoint_PresentationBeforeSave(Presentation Pres, ref bool Cancel)
+        private void Powerpoint_PresentationBeforeSave (Presentation Pres, ref bool Cancel)
         {
             if (Pres == ppt)
             {
-                Pres.Tags.Delete("ProjectData");
-                Pres.Tags.Add("ProjectData", _database.data.GetXml());
+                Pres.Tags.Delete ("ProjectData");
+                Pres.Tags.Add ("ProjectData", _database.data.GetXml());
             }
         }
 
-        private void miFileOpenPPT_Click(object sender, EventArgs e)
+        private void miFileOpenPPT_Click (object sender, EventArgs e)
         {
             if (openPPT.ShowDialog() == DialogResult.OK)
             {
@@ -153,15 +156,15 @@ namespace ProjectChart.Interface
 
                 try
                 {
-                    ppt = Powerpoint.Presentations.Open(openPPT.FileName);
+                    ppt = Powerpoint.Presentations.Open (openPPT.FileName);
 
 
 
                     var xml = ppt.Tags["ProjectData"];
                     var data = new XmlDocument();
-                    data.LoadXml(xml);
-                    XmlReader n = new XmlNodeReader(data);
-                    _database = new Database(n);
+                    data.LoadXml (xml);
+                    XmlReader n = new XmlNodeReader (data);
+                    _database = new Database (n);
 
                     txtName.Text = _database.Name;
                     dtStart.Value = _database.StartDate;
@@ -169,36 +172,69 @@ namespace ProjectChart.Interface
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(text: $"Invalid File. \nException Text:{ex.Message}" , owner: this, caption: "Error", icon: MessageBoxIcon.Error, buttons: MessageBoxButtons.OK);
+                    MessageBox.Show (text: $"Invalid File. \nException Text:{ex.Message}" , owner: this, caption: "Error", icon: MessageBoxIcon.Error, buttons: MessageBoxButtons.OK);
                 }
 
             }
         }
 
-        private void miEvents_Click(object sender, EventArgs e)
+        private void miEvents_Click (object sender, EventArgs e)
         {
             var dlg = new EventManager() { Database = _database };
-            dlg.Show(this);
+            dlg.Show (this);
         }
 
-        private void miBars_Click(object sender, EventArgs e)
+        private void miBars_Click (object sender, EventArgs e)
         {
             var dlg = new BarManager() { Database = _database };
-            dlg.Show(this);
+            dlg.Show (this);
         }
 
-        private void miFileImportXML_Click(object sender, EventArgs e)
+        private void miFileImportXML_Click (object sender, EventArgs e)
         {
-            MessageBox.Show("Not currently implemented.");
-        }
+            DialogResult d = openXML.ShowDialog();
 
-        private void miSaveXML_Click(object sender, EventArgs e)
-        {
-            var result = saveXML.ShowDialog(this);
-            if(result == DialogResult.OK)
+            if (d == DialogResult.OK)
             {
-                _database.data.WriteXml(saveXML.FileName);
+                try
+                {
+                    _database.ImportXML (openXML.FileName);
+                }
+
+                catch (Exception ex)
+                {
+                    MessageBox.Show (text: $"Invalid File. \nException Text: {ex.Message}", owner: this, caption: "Error", icon: MessageBoxIcon.Error, buttons: MessageBoxButtons.OK);
+                }
+
             }
+        }
+
+        private void miSaveXML_Click (object sender, EventArgs e)
+        {
+            var result = saveXML.ShowDialog (this);
+
+            if (result == DialogResult.OK)
+            {
+                _database.data.WriteXml (saveXML.FileName);
+            }
+        }
+
+        private void dtStart_ValueChanged (object sender, EventArgs e)
+        {
+            var start = sender as DateTimePicker;
+            _database.StartDate = start.Value;
+        }
+
+        private void dtEnd_ValueChanged (object sender, EventArgs e)
+        {
+            var end = sender as DateTimePicker;
+            _database.EndDate = end.Value;
+        }
+
+        private void txtName_TextChanged (object sender, EventArgs e)
+        {
+            var txt = sender as TextBox;
+            _database.Name = txt.Text;
         }
     }
 }

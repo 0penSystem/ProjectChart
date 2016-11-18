@@ -23,9 +23,9 @@ namespace ProjectChart.Interface
         }
 
 
-        protected override void OnLoad(EventArgs e)
+        protected override void OnLoad (EventArgs e)
         {
-            base.OnLoad(e);
+            base.OnLoad (e);
 
             RefreshGrid();
         }
@@ -39,7 +39,7 @@ namespace ProjectChart.Interface
 
         }
 
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void dataGridView1_CellContentClick (object sender, DataGridViewCellEventArgs e)
         {
             if (e.ColumnIndex == dataGridView1.Columns["colEdit"].Index)
             {
@@ -54,11 +54,11 @@ namespace ProjectChart.Interface
             {
                 //clicked the delete column.
                 var bar = dataGridView1.Rows[e.RowIndex].DataBoundItem as Bar;
-                var result = MessageBox.Show(owner: this, text: "Are you sure you want to delete? This cannot be undone.", caption: "Delete", buttons: MessageBoxButtons.OKCancel, icon: MessageBoxIcon.Warning);
+                var result = MessageBox.Show (owner: this, text: "Are you sure you want to delete? This cannot be undone.", caption: "Delete", buttons: MessageBoxButtons.OKCancel, icon: MessageBoxIcon.Warning);
 
                 if (result == DialogResult.OK)
                 {
-                    Database.deleteBar(bar);
+                    Database.deleteBar (bar);
 
                     RefreshGrid();
                 }
@@ -66,13 +66,22 @@ namespace ProjectChart.Interface
             }
         }
 
-        private void miNewBar_Click(object sender, EventArgs e)
+        private void miNewBar_Click (object sender, EventArgs e)
         {
             var dlg = new BarEditor() { Database = Database };
-            dlg.ShowDialog(this);
+            dlg.ShowDialog (this);
 
             RefreshGrid();
 
+        }
+
+        private void dataGridView1_CellContentDoubleClick (object sender, DataGridViewCellEventArgs e)
+        {
+            var bar = dataGridView1.Rows[e.RowIndex].DataBoundItem as Bar;
+
+            var dlg = new BarEditor() { Database = Database, selectedBar = bar };
+            dlg.ShowDialog();
+            RefreshGrid();
         }
     }
 }

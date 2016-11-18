@@ -20,11 +20,11 @@ namespace ProjectChart.Interface
             InitializeComponent();
         }
 
-        protected override void OnLoad(EventArgs e)
+        protected override void OnLoad (EventArgs e)
         {
-            base.OnLoad(e);
+            base.OnLoad (e);
 
-            
+
 
             RefreshGrid();
         }
@@ -35,7 +35,7 @@ namespace ProjectChart.Interface
             eventBinding.DataSource = Database.getEvents();
         }
 
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void dataGridView1_CellContentClick (object sender, DataGridViewCellEventArgs e)
         {
             if (e.ColumnIndex == dataGridView1.Columns["colEdit"].Index)
             {
@@ -50,11 +50,11 @@ namespace ProjectChart.Interface
             {
                 //clicked the delete column.
                 var clickedEvent = dataGridView1.Rows[e.RowIndex].DataBoundItem as Event;
-                var result = MessageBox.Show(owner: this, text: "Are you sure you want to delete? This cannot be undone.", caption: "Delete", buttons: MessageBoxButtons.OKCancel, icon: MessageBoxIcon.Warning);
+                var result = MessageBox.Show (owner: this, text: "Are you sure you want to delete? This cannot be undone.", caption: "Delete", buttons: MessageBoxButtons.OKCancel, icon: MessageBoxIcon.Warning);
 
                 if (result == DialogResult.OK)
                 {
-                    Database.deleteEvent(clickedEvent);
+                    Database.deleteEvent (clickedEvent);
 
                     RefreshGrid();
                 }
@@ -62,18 +62,18 @@ namespace ProjectChart.Interface
             }
         }
 
-        private void miAddEvent_Click(object sender, EventArgs e)
+        private void miAddEvent_Click (object sender, EventArgs e)
         {
             var dlg = new EventEditor() { Database = Database };
 
-            dlg.ShowDialog(this);
+            dlg.ShowDialog (this);
 
             RefreshGrid();
         }
 
-        private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        private void dataGridView1_CellDoubleClick (object sender, DataGridViewCellEventArgs e)
         {
-            if(e.ColumnIndex != dataGridView1.Columns["colDelete"].Index)
+            if (e.ColumnIndex != dataGridView1.Columns["colDelete"].Index)
             {
                 var clickedEvent = dataGridView1.Rows[e.RowIndex].DataBoundItem as Event;
 

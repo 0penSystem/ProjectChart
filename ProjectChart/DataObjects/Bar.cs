@@ -6,14 +6,15 @@ using System.Threading.Tasks;
 
 namespace ProjectChart.DataObjects
 {
-    public class Bar 
+    public class Bar
     {
         public int Id { get; private set; }
         public string Name { get; set; }
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
+        public BarShape Shape { get; set; }
 
-        public Bar(int id)
+        public Bar (int id)
         {
             Id = id;
         }
@@ -21,6 +22,11 @@ namespace ProjectChart.DataObjects
         public override string ToString()
         {
             return Name;
+        }
+
+        public enum BarShape
+        {
+            Rectangle, Rounded, Ramp
         }
     }
 }

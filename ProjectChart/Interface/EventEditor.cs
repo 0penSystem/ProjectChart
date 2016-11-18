@@ -23,13 +23,13 @@ namespace ProjectChart.Interface
             InitializeComponent();
         }
 
-        protected override void OnLoad(EventArgs e)
+        protected override void OnLoad (EventArgs e)
         {
-            base.OnLoad(e);
+            base.OnLoad (e);
 
 
             barsBinding.DataSource = Database.getBars();
-            barsBinding.Insert(0, new Bar(-1) { Name = "(None)" });
+            barsBinding.Insert (0, new Bar (-1) { Name = "(None)" });
             cbParent.DisplayMember = "Name";
             cbParent.ValueMember = "Id";
 
@@ -37,8 +37,8 @@ namespace ProjectChart.Interface
             {
                 txtText.Text = selectedEvent.Text;
                 dtDate.Value = selectedEvent.Date;
-                cbShape.SelectedIndex = (int)selectedEvent.Shape;
-                cbLocation.SelectedIndex = (int)selectedEvent.Location;
+                cbShape.SelectedIndex = (int) selectedEvent.Shape;
+                cbLocation.SelectedIndex = (int) selectedEvent.Location;
 
                 if (selectedEvent.ParentID >= 0)
                 {
@@ -54,7 +54,9 @@ namespace ProjectChart.Interface
 
                 }
                 else
+                {
                     cbParent.SelectedIndex = 0;
+                }
             }
             else
             {
@@ -69,47 +71,48 @@ namespace ProjectChart.Interface
         }
 
 
-        private void btnCancel_Click(object sender, EventArgs e)
+        private void btnCancel_Click (object sender, EventArgs e)
         {
             Close();
         }
 
-        private void txtText_Validating(object sender, CancelEventArgs e)
+        private void txtText_Validating (object sender, CancelEventArgs e)
         {
 
         }
 
-        private void dtDate_Validated(object sender, EventArgs e)
+        private void dtDate_Validated (object sender, EventArgs e)
         {
 
         }
 
-        private void btnSave_Click(object sender, EventArgs e)
+        private void btnSave_Click (object sender, EventArgs e)
         {
             if (ValidateChildren())
             {
-                var newEvent = new Event(selectedEvent?.Id ?? -1)
+                var newEvent = new Event (selectedEvent?.Id ?? -1)
                 {
                     Text = txtText.Text,
-                    Location = (Event.EventLocation)cbLocation.SelectedIndex,
-                    Shape = (Event.EventShape)cbShape.SelectedIndex,
+                    Location = (Event.EventLocation) cbLocation.SelectedIndex,
+                    Shape = (Event.EventShape) cbShape.SelectedIndex,
                     Date = dtDate.Value,
-                    ParentID = (int)cbParent.SelectedValue
+                    ParentID = (int) cbParent.SelectedValue
                 };
 
                 if (newEvent.Id == -1)
                 {
 
                     //add
-                    Database.addEvent(newEvent);
+                    Database.addEvent (newEvent);
 
                 }
                 else
                 {
                     //edit
-                    Database.updateEvent(newEvent);
+                    Database.updateEvent (newEvent);
 
                 }
+
                 Close();
             }
         }
