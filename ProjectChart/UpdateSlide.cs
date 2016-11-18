@@ -23,6 +23,8 @@ namespace ProjectChart
 
         public static void ReplaceMissing (Presentation ppt, DataSet data)
         {
+            CheckBars (ppt, data);
+            CheckEvents (ppt, data);
             ReplaceBars (ppt, data);
             ReplaceEvents (ppt, data);
         }
@@ -139,7 +141,7 @@ namespace ProjectChart
         {
             var query = from d in data.Tables["Bars"].AsEnumerable()
                         where !d.Field<bool> ("InChart")
-                        select new { Start = d.Field<DateTime> ("Start Date"), End = d.Field<DateTime> ("End Date"), ID = d.Field<int> ("BarID"), Name = d.Field<string> ("Bar Name"), Data = d };
+                        select new { Start = d.Field<DateTime> ("Start Date"), End = d.Field<DateTime> ("End Date"), ID = d.Field<int> ("BarID"), Name = d.Field<string> ("Bar Name"), Data = d, Shape = d.Field<int> ("Shape") };
 
 
             foreach (var bar in query)
@@ -156,8 +158,29 @@ namespace ProjectChart
 
                 b.TextFrame.TextRange.Text = bar.Name;
 
-                if (false) //TODO: implement shapetype for bars
-                { b.AutoShapeType = MsoAutoShapeType.msoShapeRoundedRectangle; }
+                if (bar.Shape != null)
+                {
+                    switch (bar.Shape)
+                    {
+
+                        case 0:
+                            b.AutoShapeType = MsoAutoShapeType.msoShapeRectangle;
+                            break;
+
+                        case 1:
+                            b.AutoShapeType = MsoAutoShapeType.msoShapeRoundedRectangle;
+                            break;
+
+                        case 2:
+                            b.AutoShapeType = MsoAutoShapeType.msoShapeRightTriangle;
+                            b.Flip (MsoFlipCmd.msoFlipHorizontal);
+                            break;
+
+                        default:
+                            b.AutoShapeType = MsoAutoShapeType.msoShapeRectangle;
+                            break;
+                    }
+                }
 
                 bar.Data.BeginEdit();
                 bar.Data.SetField ("InChart", true);
@@ -200,7 +223,8 @@ namespace ProjectChart
 
         }
 
-        private static void UpdateBars (Presentation ppt, DataSet data)
+
+        private static void CheckBars (Presentation ppt, DataSet data)
         {
             var shapes = ppt.Slides[1].Shapes;
 
@@ -218,6 +242,30 @@ namespace ProjectChart
 
             foreach (var x in query)
             {
+                x.Data.BeginEdit();
+                x.Data.SetField<bool> ("InChart", true);
+                x.Data.EndEdit();
+            }
+        }
+
+        private static void UpdateBars (Presentation ppt, DataSet data)
+        {
+            var shapes = ppt.Slides[1].Shapes;
+
+            foreach (DataRow d in data.Tables["Bars"].Rows)
+            {
+                d.BeginEdit();
+                d.SetField<bool> ("InChart", false);
+                d.EndEdit();
+            }
+
+            var query = from Microsoft.Office.Interop.PowerPoint.Shape s in shapes
+                        where s.Tags?["Bar"] == "true"
+                        join d in data.Tables["Bars"].AsEnumerable() on int.Parse (s.Tags["ID"]) equals d.Field<int> ("BarID")
+                        select new { End = d.Field<DateTime> ("End Date"), Start = d.Field<DateTime> ("Start Date"), Name = d.Field<string> ("Bar Name"), Shape = s, Data = d, ShapeType = d.Field < int?> ("Shape") };
+
+            foreach (var x in query)
+            {
                 TimeSpan barSpan = x.End - x.Start;
                 double barWidth = barSpan.TotalSeconds * TIME_TO_WIDTH;
                 double barOffset = (x.Start - P_START).TotalSeconds * TIME_TO_WIDTH;
@@ -226,7 +274,39 @@ namespace ProjectChart
                 x.Shape.Width = (float) barWidth;
 
 
+
                 x.Shape.TextFrame.TextRange.Text = x.Name;
+
+                if (x.ShapeType != null)
+                {
+                    switch (x.ShapeType)
+                    {
+
+                        case 0:
+                            x.Shape.AutoShapeType = MsoAutoShapeType.msoShapeRectangle;
+
+                            break;
+
+                        case 1:
+                            x.Shape.AutoShapeType = MsoAutoShapeType.msoShapeRoundedRectangle;
+                            break;
+
+                        case 2:
+                            x.Shape.AutoShapeType = MsoAutoShapeType.msoShapeRightTriangle;
+
+                            if (x.Shape.HorizontalFlip == MsoTriState.msoFalse)
+                            {
+                                x.Shape.Flip (MsoFlipCmd.msoFlipHorizontal);
+                            }
+
+                            break;
+
+                        default:
+                            x.Shape.AutoShapeType = MsoAutoShapeType.msoShapeRectangle;
+                            break;
+                    }
+                }
+
 
                 x.Data.BeginEdit();
                 x.Data.SetField<bool> ("InChart", true);
@@ -239,7 +319,35 @@ namespace ProjectChart
 
         }
 
+        private static void CheckEvents (Presentation ppt, DataSet data)
+        {
 
+            var shapes = ppt.Slides[1].Shapes;
+
+
+            foreach (DataRow d in data.Tables["Events"].Rows)
+            {
+                d.BeginEdit();
+                d.SetField<bool> ("InChart", false);
+                d.EndEdit();
+            }
+
+            var query = from Microsoft.Office.Interop.PowerPoint.Shape s in shapes
+                        where s.Tags?["Event"] == "true"
+                        join Microsoft.Office.Interop.PowerPoint.Shape s2 in shapes on s.Tags["ID"] equals s2.Tags["ID"]
+                        where s2.Tags?["EventText"] == "true"
+                        join d in data.Tables["Events"].AsEnumerable() on int.Parse (s.Tags["ID"]) equals d.Field<int> ("EventID")
+
+                        select new { Date = d.Field<DateTime> ("Event Date"), Name = d.Field<string> ("Event Name"), Shape = s, Text = s2, Data = d, ID = d.Field<int> ("EventID"), ShapeType = d.Field<int> ("Shape"), Location = d.Field<int> ("Location") };
+
+
+            foreach (var x in query)
+            {
+                x.Data.BeginEdit();
+                x.Data.SetField<bool> ("InChart", true);
+                x.Data.EndEdit();
+            }
+        }
 
         private static void UpdateEvents (Presentation ppt, DataSet data)
         {

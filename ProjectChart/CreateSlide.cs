@@ -46,8 +46,6 @@ namespace ProjectChart
             TimeSpan fromQuarterStart = new TimeSpan(), fromQuarterEnd = new TimeSpan();
 
 
-            //Console.Write((int)Math.Ceiling(start.Month / 3.0));
-
             switch ( (int) Math.Ceiling (start.Month / 3.0))
             {
 
@@ -121,7 +119,6 @@ namespace ProjectChart
             }
 
 
-
             TimeSpan span = end - start;
 
             TIME_TO_WIDTH = (width / span.TotalSeconds);
@@ -142,6 +139,8 @@ namespace ProjectChart
             {
                 var only = pptShapes.AddShape (MsoAutoShapeType.msoShapeRectangle, 0, 20, width, 20);
                 only.Tags.Add ("Timescale", "true");
+
+
             }
             else if (firstWidth + lastWidth >= width)
             {
