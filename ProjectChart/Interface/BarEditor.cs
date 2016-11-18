@@ -30,13 +30,14 @@ namespace ProjectChart.Interface
                 txtName.Text = selectedBar.Name;
                 dtStart.Value = selectedBar.Start;
                 dtEnd.Value = selectedBar.End;
+                cbShape.SelectedIndex = (int) selectedBar.Shape;
                 ValidateChildren();
             }
             else
             {
                 dtStart.Value = DateTime.Now;
                 dtEnd.Value = DateTime.Now + TimeSpan.FromDays (1);
-
+                cbShape.SelectedIndex = 0;
             }
         }
 
@@ -50,7 +51,9 @@ namespace ProjectChart.Interface
                 {
                     Name = txtName.Text,
                     Start = dtStart.Value,
-                    End = dtEnd.Value
+                    End = dtEnd.Value,
+                    Shape = (Bar.BarShape) cbShape.SelectedIndex
+
                 };
 
                 if (bar.Id == -1)

@@ -4,6 +4,7 @@ using Microsoft.Office.Core;
 using System.Data;
 using System.Collections.Generic;
 using ProjectChart.DataObjects;
+using System.Diagnostics;
 
 namespace ProjectChart
 {
@@ -222,7 +223,7 @@ namespace ProjectChart
 
             int i = 0;
 
-            var query = from DataRow d in data.Tables["Bars"].AsEnumerable() select new { Start = d.Field<DateTime> ("Start Date"), End = d.Field<DateTime> ("End Date"), ID = d.Field<int> ("BarID"), Name = d.Field<string> ("Bar Name"), Data = d };
+            var query = from DataRow d in data.Tables["Bars"].AsEnumerable() select new { Start = d.Field<DateTime> ("Start Date"), End = d.Field<DateTime> ("End Date"), ID = d.Field<int> ("BarID"), Name = d.Field<string> ("Bar Name"), Data = d, Shape = d.Field < int?> ("Shape") };
 
             foreach (var bar in query)
             {
@@ -238,8 +239,28 @@ namespace ProjectChart
 
                 b.TextFrame.TextRange.Text = bar.Name;
 
-                if (false) //TODO: implement shapetype for bars
-                { b.AutoShapeType = MsoAutoShapeType.msoShapeRoundedRectangle; }
+                if (bar.Shape != null)
+                {
+                    switch (bar.Shape)
+                    {
+
+                        case 0:
+                            b.AutoShapeType = MsoAutoShapeType.msoShapeRectangle; break;
+
+                        case 1:
+                            b.AutoShapeType = MsoAutoShapeType.msoShapeRoundedRectangle;
+                            break;
+
+                        case 2:
+                            b.AutoShapeType = MsoAutoShapeType.msoShapeRightTriangle;
+                            b.Flip (MsoFlipCmd.msoFlipHorizontal);
+                            break;
+
+                        default:
+                            b.AutoShapeType = MsoAutoShapeType.msoShapeRectangle; break;
+                    }
+                }
+
 
 
                 i++;

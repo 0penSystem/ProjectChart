@@ -74,5 +74,14 @@ namespace ProjectChart.Interface
             RefreshGrid();
 
         }
+
+        private void dataGridView1_CellContentDoubleClick (object sender, DataGridViewCellEventArgs e)
+        {
+            var bar = dataGridView1.Rows[e.RowIndex].DataBoundItem as Bar;
+
+            var dlg = new BarEditor() { Database = Database, selectedBar = bar };
+            dlg.ShowDialog();
+            RefreshGrid();
+        }
     }
 }

@@ -134,18 +134,17 @@ namespace ProjectChart.DataObjects
 
         #endregion
 
-
         #region Bar Methods
         public Bar getBar (int id)
         {
-            var query = from DataRow d in data.Tables["Bars"].AsEnumerable() where d.Field<int> ("BarID") == id select new Bar (d.Field<int> ("BarId")) { Name = d.Field<string> ("Bar Name"), Start = d.Field<DateTime> ("Start Date"), End = d.Field<DateTime> ("End Date") };
+            var query = from DataRow d in data.Tables["Bars"].AsEnumerable() where d.Field<int> ("BarID") == id select new Bar (d.Field<int> ("BarId")) { Name = d.Field<string> ("Bar Name"), Start = d.Field<DateTime> ("Start Date"), End = d.Field<DateTime> ("End Date"), Shape = (Bar.BarShape) (d.Field < int?> ("Shape") ?? 0) };
 
             return query.FirstOrDefault();
         }
 
         public IEnumerable<Bar> getBars()
         {
-            var query = from DataRow d in data.Tables["Bars"].AsEnumerable() select new Bar (d.Field<int> ("BarId")) { Name = d.Field<string> ("Bar Name"), Start = d.Field<DateTime> ("Start Date"), End = d.Field<DateTime> ("End Date") };
+            var query = from DataRow d in data.Tables["Bars"].AsEnumerable() select new Bar (d.Field<int> ("BarId")) { Name = d.Field<string> ("Bar Name"), Start = d.Field<DateTime> ("Start Date"), End = d.Field<DateTime> ("End Date"), Shape = (Bar.BarShape) (d.Field < int?> ("Shape") ?? 0) };
 
             List<Bar> list = new List<Bar>();
 
@@ -182,6 +181,7 @@ namespace ProjectChart.DataObjects
             newRow.SetField ("Bar Name", bar.Name);
             newRow.SetField ("Start Date", bar.Start);
             newRow.SetField ("End Date", bar.End);
+            newRow.SetField ("Shape", bar.Shape);
 
             data.Tables["Bars"].Rows.Add (newRow);
         }
@@ -204,6 +204,7 @@ namespace ProjectChart.DataObjects
                 toUpdate.SetField ("Bar Name", bar.Name);
                 toUpdate.SetField ("Start Date", bar.Start);
                 toUpdate.SetField ("End Date", bar.End);
+                toUpdate.SetField ("Shape", bar.Shape);
                 toUpdate.EndEdit();
             }
 
