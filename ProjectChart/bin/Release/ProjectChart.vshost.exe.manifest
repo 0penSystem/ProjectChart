@@ -3,7 +3,7 @@
   <asmv1:assemblyIdentity name="ProjectChart.exe" version="1.1.0.0" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
   <application />
   <entryPoint>
-    <assemblyIdentity name="ProjectChart" version="1.2.0.0" language="neutral" processorArchitecture="msil" />
+    <assemblyIdentity name="ProjectChart" version="1.1.2.0" language="neutral" processorArchitecture="msil" />
     <commandLine file="ProjectChart.exe" parameters="" />
   </entryPoint>
   <trustInfo>
@@ -42,14 +42,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ProjectChart.exe" size="147352">
-      <assemblyIdentity name="ProjectChart" version="1.2.0.0" language="neutral" processorArchitecture="msil" />
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ProjectChart.exe" size="154520">
+      <assemblyIdentity name="ProjectChart" version="1.1.2.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>GQ9DoHEPGcDxauvcvadyThz/XZleq+ooXydDQ1lx7us=</dsig:DigestValue>
+        <dsig:DigestValue>mWCMIiha/1oRZdwe5VaR80Xja7ulivNz9ZXgBy2yFk0=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
