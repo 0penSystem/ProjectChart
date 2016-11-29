@@ -140,11 +140,8 @@ namespace ProjectChart.Interface
 
         private void Powerpoint_PresentationBeforeSave (Presentation Pres, ref bool Cancel)
         {
-            if (Pres == ppt)
-            {
-                Pres.Tags.Delete ("ProjectData");
-                Pres.Tags.Add ("ProjectData", _database.data.GetXml());
-            }
+            ppt.Tags.Delete ("ProjectData");
+            ppt.Tags.Add ("ProjectData", _database.data.GetXml());
         }
 
         private void miFileOpenPPT_Click (object sender, EventArgs e)
@@ -235,6 +232,32 @@ namespace ProjectChart.Interface
         {
             var txt = sender as TextBox;
             _database.Name = txt.Text;
+        }
+
+        private void miDebugCheckXML_Click (object sender, EventArgs e)
+        {
+            if (openPPT.ShowDialog() == DialogResult.OK)
+            {
+
+                Powerpoint = Powerpoint ?? new Microsoft.Office.Interop.PowerPoint.Application();
+
+                try
+                {
+                    ppt = Powerpoint.Presentations.Open (openPPT.FileName);
+
+
+
+                    var xml = ppt.Tags["ProjectData"];
+
+                    Console.Out.Write (xml);
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show (text: $"Invalid File. \nException Text:{ex.Message}", owner: this, caption: "Error", icon: MessageBoxIcon.Error, buttons: MessageBoxButtons.OK);
+                }
+
+            }
         }
     }
 }
