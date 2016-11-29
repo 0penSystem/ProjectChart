@@ -47,6 +47,8 @@
             this.miEvents = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.miHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
+            this.miDebug = new System.Windows.Forms.ToolStripMenuItem();
+            this.miDebugCheckXML = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
             this.txtName = new System.Windows.Forms.TextBox();
             this.dtStart = new System.Windows.Forms.DateTimePicker();
@@ -56,8 +58,6 @@
             this.openXML = new System.Windows.Forms.OpenFileDialog();
             this.openPPT = new System.Windows.Forms.OpenFileDialog();
             this.saveXML = new System.Windows.Forms.SaveFileDialog();
-            this.miDebug = new System.Windows.Forms.ToolStripMenuItem();
-            this.miDebugCheckXML = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             //
@@ -214,9 +214,27 @@
             //
             this.miHelpAbout.Name = "miHelpAbout";
             this.miHelpAbout.ShortcutKeys = System.Windows.Forms.Keys.F1;
-            this.miHelpAbout.Size = new System.Drawing.Size (152, 22);
+            this.miHelpAbout.Size = new System.Drawing.Size (126, 22);
             this.miHelpAbout.Text = "&About";
             this.miHelpAbout.Click += new System.EventHandler (this.miHelpAbout_Click);
+            //
+            // miDebug
+            //
+            this.miDebug.DropDownItems.AddRange (new System.Windows.Forms.ToolStripItem[]
+            {
+                this.miDebugCheckXML
+            });
+            this.miDebug.Name = "miDebug";
+            this.miDebug.Size = new System.Drawing.Size (54, 20);
+            this.miDebug.Text = "Debug";
+            this.miDebug.Visible = false;
+            //
+            // miDebugCheckXML
+            //
+            this.miDebugCheckXML.Name = "miDebugCheckXML";
+            this.miDebugCheckXML.Size = new System.Drawing.Size (158, 22);
+            this.miDebugCheckXML.Text = "Check PPT XML";
+            this.miDebugCheckXML.Click += new System.EventHandler (this.miDebugCheckXML_Click);
             //
             // label1
             //
@@ -281,23 +299,6 @@
             // saveXML
             //
             this.saveXML.DefaultExt = "xml";
-            //
-            // miDebug
-            //
-            this.miDebug.DropDownItems.AddRange (new System.Windows.Forms.ToolStripItem[]
-            {
-                this.miDebugCheckXML
-            });
-            this.miDebug.Name = "miDebug";
-            this.miDebug.Size = new System.Drawing.Size (54, 20);
-            this.miDebug.Text = "Debug";
-            //
-            // miDebugCheckXML
-            //
-            this.miDebugCheckXML.Name = "miDebugCheckXML";
-            this.miDebugCheckXML.Size = new System.Drawing.Size (158, 22);
-            this.miDebugCheckXML.Text = "Check PPT XML";
-            this.miDebugCheckXML.Click += new System.EventHandler (this.miDebugCheckXML_Click);
             //
             // MainForm
             //
